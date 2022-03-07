@@ -27,7 +27,7 @@ class _ConfirmPin2State extends State<ConfirmPin2> {
   String confirmpin="";
   String token="";
   String message="";
-  Future<dynamic> register() async{
+  void register() async{
     var body = {
       "fullname": widget.fullname,
       "username": widget.username,
@@ -51,36 +51,28 @@ class _ConfirmPin2State extends State<ConfirmPin2> {
       message=responseJson["message"];
     });
     print(message);
-    return message;
-
-
-    //AUTHENTICATE WITH NEW USER DETAILS TO GET TOKEN
-    // body = {
-    //   "email": widget.email,
-    //   "password": widget.password,
-    // };
-    // print(widget.email);
-    // print(widget.password);
-    //  response = await http.post(
-    //     Uri.parse('https://spray-dev.herokuapp.com/api/users/auth/'),
-    //     body: json.encode(body),
-    //     headers: {
-    //       "Content-Type": "application/json"
-    //     });
-    //
-    // if (response.statusCode != 200) {
-    //   throw HTTPException(response.statusCode, "Unable to load...Try again");
-    // }
-    // responseJson =  jsonDecode(response.body);
-    // token=responseJson["data"];
-    // print(token);
-    pushNewScreenWithRouteSettings(
-      context,
-      settings: RouteSettings(name: Dashboard.routeName),
-      screen: Dashboard(token: token),
-      withNavBar: true,
-      pageTransitionAnimation: PageTransitionAnimation.cupertino,
-    );
+    Alert(
+      useRootNavigator: false,
+      context: context,
+      title: "Sub Account Created, check your mail",
+      //desc: "",
+      image: Image.asset(
+        "assets/finalcheck.png",
+        color: Colors.blue,),
+      buttons: [
+        DialogButton(
+          color: Colors.blue,
+          child: Text(
+            "Okay",
+            style: TextStyle(color: Colors.white, fontSize: 12),
+          ),
+          onPressed: () {
+           Navigator.pop(context);
+          },
+          width: 120,
+        )
+      ],
+    ).show();
   }
 
   @override
@@ -235,7 +227,6 @@ class _ConfirmPin2State extends State<ConfirmPin2> {
                             pin4FocusNode.unfocus();
                             if(widget.pin==confirmpin){
                               register();
-
                             }
                             else{
                               Alert(

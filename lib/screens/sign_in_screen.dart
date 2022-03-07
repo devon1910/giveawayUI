@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:giveawayui/components/DefaultButton.dart';
+import 'package:giveawayui/components/loadDash.dart';
 import 'package:giveawayui/components/spray.dart';
 import 'package:giveawayui/screens/forgot_password.dart';
 import 'package:giveawayui/screens/sign_up_screen.dart';
@@ -19,11 +20,13 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
+
   final _formKey = GlobalKey<FormState>();
   bool status=false;
   String email="";
   String password="";
   String token="";
+  bool _obscureText = true;
   void _submit() async{
     if (_formKey.currentState!.validate()) {
       var body = {
@@ -33,8 +36,8 @@ class _SignInScreenState extends State<SignInScreen> {
       print(email);
       print(password);
       ScaffoldMessenger.of(context).showSnackBar( SnackBar(
-        content: Text("Processing data"),
-        duration: Duration(milliseconds: 3000), ), );
+        content: Text("Loading..."),
+        duration: Duration(milliseconds: 5000), ), );
       var response = await http.post(
           Uri.parse('https://spray-dev.herokuapp.com/api/users/auth/'),
           body: json.encode(body),
@@ -68,11 +71,12 @@ class _SignInScreenState extends State<SignInScreen> {
       print(token);
       Navigator.of(context).push(
           MaterialPageRoute(
-              builder:(context)=> Dashboard(token: token)));
+              builder:(context)=> LoadDash(token: token)));
 
     }else{
       return;
     }
+
   }
   @override
   Widget build(BuildContext context) {
@@ -187,7 +191,7 @@ class _SignInScreenState extends State<SignInScreen> {
                              color: Colors.black,
                            //  backgroundColor: Color(0xFFE4E4E4)
                            ),
-                           obscureText: true,
+                           obscureText: _obscureText,
                           // keyboardType: TextInputType.p,
                            decoration: InputDecoration(
                              fillColor: Color(0xFFE4E4E4),
@@ -195,9 +199,16 @@ class _SignInScreenState extends State<SignInScreen> {
                              prefixIcon: Icon(
                                Icons.lock_outline,
                                color: Colors.black,),
-                             suffixIcon: Icon(
-                               Icons.remove_red_eye,
-                                 color: Colors.black
+                             suffixIcon: IconButton(
+                                 icon: Icon(
+                                     _obscureText ? Icons.visibility_off : Icons.visibility
+                                 ),
+                                 color: Colors.black,
+                               onPressed: () {
+                                 setState(() {
+                                   _obscureText = !_obscureText;
+                                 });
+                               },
                              ),
                              hintText: '**********',
                              contentPadding: EdgeInsets.symmetric(

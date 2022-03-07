@@ -27,20 +27,20 @@ class ActionTile extends StatelessWidget {
                 width: getProportionateScreenWidth(55),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(15)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.3),
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                        offset: Offset(0, 5), // changes position of shadow,higher 5 less shadow
-                      ),
-                    ],
+                    // boxShadow: [
+                    //   BoxShadow(
+                    //     color: Colors.grey.withOpacity(0.3),
+                    //     spreadRadius: 5,
+                    //     blurRadius: 7,
+                    //     offset: Offset(0, 5), // changes position of shadow,higher 5 less shadow
+                    //   ),
+                    // ],
                     color: color
                 ),
                 child: image
             ),
           ),
-          SizedBox(height: getProportionateScreenHeight(5),),
+          SizedBox(height: getProportionateScreenHeight(5.0),),
 
           Text(text,style: GoogleFonts.titilliumWeb(
             textStyle: TextStyle(

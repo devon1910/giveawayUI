@@ -4,10 +4,13 @@ import 'package:giveawayui/screens/spray_amount.dart';
 import 'package:giveawayui/size_config.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class EventCode extends StatefulWidget {
+  static String routeName="/eventCode";
   final String token;
-  const EventCode({required this.token});
+  final events;
+  const EventCode({required this.token,required this.events});
 
   @override
   _EventCodeState createState() => _EventCodeState();
@@ -15,6 +18,64 @@ class EventCode extends StatefulWidget {
 
 class _EventCodeState extends State<EventCode> {
   String eventCode="";
+  void verifyEventCode(){
+    var events= widget.events;
+    if(eventCode.isNotEmpty){
+     for(int i=0;i<events.length;i++){
+       if(eventCode==events[i]['event_code'] && events[i]['status']=='ACTIVE'){
+         pushNewScreen(context,
+           //  settings: RouteSettings(name: SprayAmount.routeName),
+           screen: SprayAmount(
+             ecode: eventCode,
+             token: widget.token,
+           ),
+           withNavBar: true,
+           pageTransitionAnimation: PageTransitionAnimation.cupertino,
+         );
+       }
+       else{
+         Alert(
+           useRootNavigator: false,
+           context: context,
+           type: AlertType.error,
+           title: "ERROR",
+           desc: "No ACTIVE Event with code: $eventCode",
+           buttons: [
+             DialogButton(
+               child: Text(
+                 "OK",
+                 style: TextStyle(color: Colors.white, fontSize: 20),
+               ),
+               onPressed: () => Navigator.pop(context),
+               width: 120,
+             )
+           ],
+         ).show();
+         break;
+       }
+       }
+
+    }else{
+      Alert(
+        useRootNavigator: false,
+        context: context,
+        type: AlertType.error,
+        title: "ERROR",
+        desc: "Enter a valid Event Code.",
+        buttons: [
+          DialogButton(
+            child: Text(
+              "OK",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () => Navigator.pop(context),
+            width: 120,
+          )
+        ],
+      ).show();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
@@ -83,16 +144,8 @@ class _EventCodeState extends State<EventCode> {
                   child: DefaultButton(text: 'Next',
                       press: (){
                     print(eventCode);
-                        pushNewScreenWithRouteSettings(
-                          context,
-                          settings: RouteSettings(name: SprayAmount.routeName),
-                          screen: SprayAmount(
-                            ecode: eventCode,
-                            token: widget.token,
-                          ),
-                          withNavBar: true,
-                          pageTransitionAnimation: PageTransitionAnimation.cupertino,
-                        );
+                    verifyEventCode();
+
                       }
                   ),
                 )

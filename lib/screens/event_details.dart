@@ -1,17 +1,24 @@
+
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:giveawayui/components/DefaultButton.dart';
+import 'package:giveawayui/components/loadDash.dart';
+import 'package:giveawayui/components/spray.dart';
+import 'package:giveawayui/screens/dashboard.dart';
 import 'package:giveawayui/size_config.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:social_share/social_share.dart';
 
 
 class EventDetails extends StatefulWidget {
   static String routeName="/eventDetails";
-  const EventDetails({required this.name,required this.code,});
+  const EventDetails({required this.name,required this.code,required this.token});
 
- final String name,code;
+ final String name,code,token;
 
 
   @override
@@ -76,7 +83,7 @@ class _EventDetailsState extends State<EventDetails> {
           Center(
             child: Text('${widget.code}'),
           ),
-          SizedBox(height:getProportionateScreenHeight(60.0)),
+          SizedBox(height:getProportionateScreenHeight(30.0)),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 100.0),
             child: Row(
@@ -116,12 +123,21 @@ class _EventDetailsState extends State<EventDetails> {
                 ),
                 Text('Share')
 
-             ],)
+             ],),
+
               ],
 
             ),
-          )
+          ),
+          SizedBox(height: getProportionateScreenHeight(10)),
+         ElevatedButton(
+             onPressed:  (){
+               Navigator.of(context).push(
+                   MaterialPageRoute(
+                       builder:(context)=> LoadDash(token: widget.token)));
 
+             },
+             child: Text('Home'))
         ],
       ),
     );

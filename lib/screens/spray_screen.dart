@@ -32,27 +32,9 @@ class _SprayScreen extends State<SprayScreen> {
   bool _isInitialValue = true;//checks height of swipe
   dynamic result;
   dynamic amt;
+  bool auto=false;
+  int i=0;
 
-  // void _displaySuccessMotionToast() {
-  //   MotionToast.success(
-  //     title: Text(
-  //       'You sprayed \$$result',
-  //       style: TextStyle(fontWeight: FontWeight.bold),
-  //     ),
-  //     description: Text(
-  //       '',
-  //       style: TextStyle(fontSize: 12),
-  //     ),
-  //     animationType: ANIMATION.fromTop,
-  //     position: MOTION_TOAST_POSITION.top,
-  //     width: 300,
-  //     animationDuration: Duration(milliseconds: 1500),
-  //     onClose: (){
-  //       return this.context;
-  //     }
-  //
-  //   ).show(context);
-  // }
 
   @override
   void initState() {
@@ -83,7 +65,7 @@ class _SprayScreen extends State<SprayScreen> {
         ),
       ),
       SizedBox(height: getProportionateScreenHeight(15)),
-      Text('Swipe up to Spray',
+      Text('Swipe Image up to Spray',
           style: GoogleFonts.nunito(
               textStyle: TextStyle(
                   color: Color(0xff243656),
@@ -96,7 +78,7 @@ class _SprayScreen extends State<SprayScreen> {
                   msg: "You sprayed \$$result",
                   toastLength: Toast.LENGTH_SHORT,
                   gravity: ToastGravity.TOP,
-                  timeInSecForIosWeb: 1,
+                  timeInSecForIosWeb: 2,
                   backgroundColor: Colors.green,
                   textColor: Colors.white,
                   fontSize: 16.0
@@ -105,7 +87,7 @@ class _SprayScreen extends State<SprayScreen> {
 
               setState(() {
                 _isInitialValue = !_isInitialValue;
-                Timer(Duration(milliseconds: 300), () {
+                Timer(Duration(milliseconds: 200), () {
                   setState(() {
                     amt-=result;
                     _isInitialValue = !_isInitialValue;
@@ -119,6 +101,7 @@ class _SprayScreen extends State<SprayScreen> {
         },
         child: Center(
             child: AnimatedContainer(
+           //   padding: EdgeInsets.fromLTRB(0),
               height: _isInitialValue ?
               getProportionateScreenHeight(300)
                   :getProportionateScreenHeight(220),
@@ -140,7 +123,7 @@ class _SprayScreen extends State<SprayScreen> {
               ),
             )),
       ),
-      SizedBox(height: getProportionateScreenHeight(50)),
+    //  SizedBox(height: getProportionateScreenHeight(50)),
       Container(
         margin: EdgeInsets.only(right: getProportionateScreenWidth(160)),
         child: Text('Sprayyy Awayyy',
@@ -165,19 +148,66 @@ class _SprayScreen extends State<SprayScreen> {
                       fontSize: 36.0,
                       fontWeight: FontWeight.w700)),
             ),
-            Row(
-              children: [
-                Image.asset(
-                  'assets/swipe_arr.png',
-                  height: getProportionateScreenHeight(25.0),
-                  color: Color(0xff3F51B5),
-                ),
-                Image.asset(
-                  'assets/swipe.png',
-                  height: getProportionateScreenHeight(25.0),
-                  color: Color(0xff3F51B5),
-                ),
-              ],
+            GestureDetector(
+              onTap: (){
+                Fluttertoast.showToast(
+                    msg: auto? "Auto-Spray activated 🤑😀" : "Auto-Spray is deactivated",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.TOP,
+                    timeInSecForIosWeb: 2,
+                    backgroundColor: auto!=true ? Colors.green : Colors.red ,
+                    textColor: Colors.white,
+                    fontSize: 16.0
+                );
+               setState(() {
+                 auto=!auto;
+                 print('auto is: $auto');
+               });
+              // while(i<widget.times){
+              //    Timer(Duration(seconds: 2),(){
+              //      setState(() {
+              //        print('Deducted: ${widget.times} times');
+              //        amt-=result;
+              //       // print(amt);
+              //      });
+              //    });
+              //  }
+             //  while(auto){
+                 // Timer(Duration(milliseconds: 6000), (){
+                 //   print('Printed to trigger Spray');
+                 //   setState(() {
+                 //     _isInitialValue = !_isInitialValue;
+                 //     Timer(Duration(milliseconds: 200), () {
+                 //       setState(() {
+                 //         amt-=result;
+                 //         _isInitialValue = !_isInitialValue;
+                 //         print("Yeah, this line is printed after Spray succeeds");
+                 //       });
+                 //     });
+                 //   });
+                 // });
+                // Timer(Duration(
+                //   seconds: 3
+                // ),(){
+                //    print('Printing after 3 seconds');
+                // });
+             //  }
+              },
+
+              child: Row(
+                children: [
+                  Image.asset(
+                    'assets/swipe_arr.png',
+                    height: getProportionateScreenHeight(25.0),
+                    color: Color(0xff3F51B5),
+                  ),
+                  Image.asset(
+                    'assets/swipe.png',
+                    height: getProportionateScreenHeight(25.0),
+                    color: Color(0xff3F51B5),
+                  ),
+                ],
+              ),
             )
           ],
         ),

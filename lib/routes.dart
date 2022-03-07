@@ -6,6 +6,7 @@ import 'package:giveawayui/screens/confirm_pin.dart';
 import 'package:giveawayui/screens/confirm_pin2.dart';
 import 'package:giveawayui/screens/create_event.dart';
 import 'package:giveawayui/screens/dashboard.dart';
+import 'package:giveawayui/screens/event_code.dart';
 import 'package:giveawayui/screens/event_details.dart';
 import 'package:giveawayui/screens/forgot_password.dart';
 import 'package:giveawayui/screens/landing_screen.dart';
@@ -27,9 +28,9 @@ final Map<String, WidgetBuilder> routes = {
   LandingScreen.routeName: (context) => LandingScreen(),
   ForgotPassword.routeName: (context) => ForgotPassword(),
   Otp.routeName: (context) => Otp(),
-  Dashboard.routeName: (context) => Dashboard(token: '',),
+  Dashboard.routeName: (context) => Dashboard(token: '',trans: '',user: '',events: '',),
   Transactions.routeName: (context) => Transactions(),
-  Receive.routeName: (context) => Receive(),
+  Receive.routeName: (context) => Receive(token: '',),
  // Send.routeName: (context) => Send(),
  // ScanScreen.routeName: (context) => ScanScreen(),
   Amount.routeName: (context) => Amount(),
@@ -39,5 +40,6 @@ final Map<String, WidgetBuilder> routes = {
   ConfirmPin2.routeName: (context) => ConfirmPin2(fullname: '',username: '',
     email: '',password: '',pin: '',phone: ''),
   CreateEvent.routeName: (context) => CreateEvent(''),
-  EventDetails.routeName: (context) => EventDetails(name: '',code: '',),
+  EventDetails.routeName: (context) => EventDetails(name: '',code: '',token: '',),
+  EventCode.routeName: (context) => EventCode(events: '', token: '',),
 };

@@ -1,188 +1,134 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:giveawayui/components/ActionTile.dart';
+import 'package:giveawayui/components/loadDash.dart';
 import 'package:giveawayui/screens/send.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:social_share/social_share.dart';
 
 import '../size_config.dart';
+import 'dashboard.dart';
 
 class Receive extends StatefulWidget {
   static String routeName="/receive";
+  final String token;
+  const Receive({required this.token});
   @override
   _ReceiveState createState() => _ReceiveState();
 }
 
 class _ReceiveState extends State<Receive> {
   //final controller = TextEditingController();
+  bool isCreated=false;
   String text="";
   @override
   Widget build(BuildContext context) {
     return Container(
-      // margin: EdgeInsets.only(bottom: 200.0),
+       //margin: EdgeInsets.only(top: getProportionateScreenHeight(100.0)),
       color: Color(0xFFFFFFFF),
-      child: SingleChildScrollView(
-        child: Column(
-            children: [
-              Container(
-                padding: EdgeInsets.all(20.0),
-                decoration: BoxDecoration(
-                  borderRadius:BorderRadius.only(bottomRight: Radius.circular(60)),
-                  gradient:LinearGradient(
-                      colors: [
-                        Color(0xFF3F51B5),
-                        Color(0xFF38A3A5),
-                        Color(0xFF38A3A5),
-                        Color(0xFF38A3A5)
-                      ]
-                  ),
-                  //borderRadius:
-                ),
-                child: Column(
-                    children:[
-                      Container(
-                        padding: EdgeInsets.all(20.0),
-                        margin: EdgeInsets.only(top:15.0),
-                        child: Row(
-                          // crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Image.asset('assets/image1.png',
-                                height: getProportionateScreenHeight(70)),
-                            Container(
-                              margin: EdgeInsets.only(right:40),
-                              child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children:[
-                                    Container(
-                                      margin: EdgeInsets.only(right:20),
-                                      child: Text('Hello Chief',
-                                          textAlign: TextAlign.left,
-                                          style: GoogleFonts.nunito(
-                                              decoration: TextDecoration.none,
-                                              textStyle: TextStyle(
-                                                  color: Color(0xffffffff), fontSize: 20.0, fontWeight: FontWeight.w800))),
-                                    ),
-                                    Text('Take a look at your\nwallet. Opor!',
-                                        textAlign: TextAlign.start,
-                                        style: GoogleFonts.nunito(
-                                            decoration: TextDecoration.none,
-                                            textStyle: TextStyle(
-                                                color: Color(0xffffffff), fontSize: 15.0, fontWeight: FontWeight.w300)) ),
-                                  ] ),
-                            ),
-
-                            Icon(Icons.notifications_none_outlined,size: 40.0,color: Colors.white)
-                          ],
-                        ),
-
-                      ),
-                      Container(
-                          margin: EdgeInsets.fromLTRB(0,10.0,150.0,0.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text('\$ 272.30',
-                                  textAlign: TextAlign.start,
-                                  style:GoogleFonts.nunito(
-                                      decoration: TextDecoration.none,
-                                      textStyle: TextStyle(
-                                          color: Color(0xffffffff), fontSize: 38.0, fontWeight: FontWeight.w900))),
-                              Container(
-                                margin: EdgeInsets.only(right:80),
-                                child: Text('Balance',
-                                  textAlign: TextAlign.start,
-                                  style:GoogleFonts.nunito(
-                                      decoration: TextDecoration.none,
-                                      textStyle: TextStyle(
-                                          color: Color(0xffffffff), fontSize: 16.0, fontWeight: FontWeight.w400)) ,),
-                              )
-                            ],
-                          )
-                      )]
-                ),
-              ),
-              //SizedBox(height: getProportionateScreenHeight(5.0),),
-              Card(
-                elevation: 0,
-                margin: EdgeInsets.fromLTRB(60, 20, 50, getProportionateScreenHeight(5)),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ActionTile(
-                      color: Color(0xffEDF1F9),
-                      image: Image.asset('assets/deposit.png'),
-                      text: 'Deposit',
-                      onClick: (){
-
-                      },
-                    ),
-                    ActionTile(
-                      color: Color(0xffF4F2F2),
-                      image: Image.asset('assets/send.png'),
-                      text: 'Send',
-                      onClick: (){
-                        // pushNewScreenWithRouteSettings(
-                        // //   context,
-                        // //   settings: RouteSettings(name: Send.routeName),
-                        // //   screen: Send(),
-                        // //   withNavBar: true,
-                        // //   pageTransitionAnimation: PageTransitionAnimation.cupertino,
-                        // // );
-
-                      },
-                    ),
-                    ActionTile(
-                      color: Color(0xFFD2E1FF),
-                      image: Image.asset('assets/receive.png'),
-                      text: 'Receive',
-                      onClick: (){
-                        pushNewScreenWithRouteSettings(
-                          context,
-                          settings: RouteSettings(name: Receive.routeName),
-                          screen: Receive(),
-                          withNavBar: true,
-                          pageTransitionAnimation: PageTransitionAnimation.cupertino,
-                        );
-                      },
-                    ),
-                    ActionTile(
-                      color: Color(0xffEDF1F9),
-                      image: Image.asset('assets/redeem.png'),
-                      text: 'Redeem',
-                      onClick: (){
-
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              Card(
-                margin: EdgeInsets.fromLTRB(90.0, 0, 0, 0.0),
-                elevation: 0.0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text('Receive',
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Card(
+             // margin: EdgeInsets.fromLTRB(getProportionateScreenWidth(90.0),getProportionateScreenWidth(90.0), 0, 0.0),
+              elevation: 0.0,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Center(
+                    child: Text('Receive',
                     style: GoogleFonts.nunito(
                         textStyle: TextStyle(
-                            color: Color(0xff3F51B5), fontSize: 40.0, fontWeight: FontWeight.w800)),),
-                    Icon(Icons.cancel,
-                      size: 40.0,
-                      color: Color(0xFF3F51B5),)
-                  ],
-                ),
+                            color: Color(0xff3F51B5), fontSize: getProportionateScreenWidth(40), fontWeight: FontWeight.w800)),),
+                  ),
+                  Center(
+                    child: Text('Generate and Send QR code to Friends!',
+                      style: GoogleFonts.nunito(
+                          textStyle: TextStyle(
+                              color: Color(0xff3F51B5), fontSize: getProportionateScreenWidth(16), fontWeight: FontWeight.w300)),),
+                  ),
+
+                ],
               ),
-              Column(
-                children: [
-                  //Image.asset('assets/Bitmap.png'),
-                  QrImage(
-                      data: text,
-                      size: 200,
-                      backgroundColor: Colors.white,
+            ),
+            Column(
+              children: [
+                //Image.asset('assets/Bitmap.png'),
+                QrImage(
+                    data: text,
+                    size: 200,
+                    backgroundColor: Colors.white,
+                  ),
+
+                if( isCreated)...[
+                  SizedBox(height: getProportionateScreenHeight(30.0),),
+                  Card(
+                    elevation: 0,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 100.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
+                        children: [
+                          Row(
+                            // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            //  crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              IconButton(
+                                  onPressed: (){
+                                    Clipboard.setData(ClipboardData(text: text));
+                                    //SocialShare.copyToClipboard('${widget.code}');
+                                  },
+                                  icon: Icon(
+                                      Icons.copy
+                                  )
+                              ),
+                              Text('Copy'),
+
+                            ],),
+                          Container(
+                            color: Color(0xff3F51B5),
+                            width: 2.0,
+                            child: Divider(height: 35.0,),
+                          ),
+                          Row(children: [
+                            IconButton(
+                              onPressed: (){
+                                SocialShare.shareWhatsapp("Hello World");
+                              },
+                              icon: Icon(
+                                  Icons.share
+                              ),
+                            ),
+                            Text('Share')
+
+                          ],),
+
+                        ],
+
+                      ),
                     ),
+                  ),
+                  SizedBox(height: getProportionateScreenHeight(10)),
+                  ElevatedButton(
+                    style: ButtonStyle(
+
+                    ) ,
+                      onPressed:  (){
+                        ScaffoldMessenger.of(context).showSnackBar( SnackBar(
+                          content: Text("Loading..."),
+                          duration: Duration(milliseconds: 5000), ), );
+                        Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder:(context)=> LoadDash(token: widget.token)));
+
+                      },
+                      child: Text('Home'))
+                ] else...[
                   Card(
                     child: TextField(
                       onChanged: (value){
@@ -190,37 +136,40 @@ class _ReceiveState extends State<Receive> {
                       },
                       //controller: controller,
                       style: TextStyle(
-                        color: Color(0xff3F51B5),
-                        fontWeight: FontWeight.w400,
-                        fontSize: 20
+                          color: Color(0xff3F51B5),
+                          fontWeight: FontWeight.w400,
+                          fontSize: 20
                       ),
                       decoration: InputDecoration(
                         hintText: 'Enter Data',
                         hintStyle: TextStyle(
-                          color: Colors.grey
+                            color: Colors.grey
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(color: Colors.white)
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: Colors.white)
                         ),
                         focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                             borderSide: BorderSide(color: Colors.white)
                         ),
                         suffixIcon: IconButton(
-                          icon: Icon(Icons.done),
-                          onPressed: () => setState(() {
+                            icon: Icon(Icons.done),
+                            onPressed: () =>
+                                setState(() {
+                              isCreated= true;
                             })),
 
-                        ),
-
                       ),
+
+                    ),
                   ),
+                ]
+
 //                      style: GoogleFonts.nunito(
 //                          textStyle: TextStyle(
 //                              color: Color(0xff000000), fontSize: 20.0, fontWeight: FontWeight.w400)),),
-                  ])]),
-      ),
+                ])]),
       );
   }
 }

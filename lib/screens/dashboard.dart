@@ -10,8 +10,13 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import 'create_event.dart';
 
 class Dashboard extends StatefulWidget {
-  Dashboard({required this.token});
+  Dashboard({required this.token,
+    required this.trans,
+  required this.user,
+  required this.events});
   final String? token;
+  final  trans,events,user;
+
   static String routeName="/dashboard";
 
 
@@ -23,30 +28,34 @@ class _DashboardState extends State<Dashboard> {
   PersistentTabController _controller = PersistentTabController(initialIndex: 0);
   List<Widget> _buildScreens() {
     return [
-      Spray(token: widget.token!),
+      Spray(token: widget.token!,
+        events: widget.events,
+        user: widget.user,
+        trans:widget.trans
+      ),
       Container()
     ];
   }
   List<PersistentBottomNavBarItem> _navBarsItems() {
     return [
       PersistentBottomNavBarItem(
-        icon: Image.asset('assets/wallet.png',
-          width: 200,
-          height: 200,),
+        // icon: Image.asset('assets/wallet.png',
+        //   width: 400,
+        //   height: 400,),
+        icon: Icon(
+          Icons.account_balance_wallet_outlined
+        ),
         title: ("Wallet"),
-        activeColorPrimary: CupertinoColors.activeBlue,
+        activeColorPrimary: Color.fromRGBO(52, 138, 199, 1.0),
         inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
-      // PersistentBottomNavBarItem(
-      //   icon: Image.asset('assets/Group.png'),
-      //   title: ("Spray"),
-      //   activeColorPrimary: CupertinoColors.activeBlue,
-      //   inactiveColorPrimary: CupertinoColors.systemGrey,
-      // ),
       PersistentBottomNavBarItem(
-        icon: Image.asset('assets/settings.png'),
+       // icon: Image.asset('assets/settings.png'),
+        icon: Icon(
+          Icons.settings_rounded
+        ),
         title: ("Settings"),
-        activeColorPrimary: CupertinoColors.activeBlue,
+        activeColorPrimary: Color.fromRGBO(52, 138, 199, 1.0),
         inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
     ];
@@ -61,7 +70,6 @@ class _DashboardState extends State<Dashboard> {
     return PersistentTabView(
       context,
       controller: _controller,
-
       screens: _buildScreens(),
       items: _navBarsItems(),
       confineInSafeArea: true,

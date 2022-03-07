@@ -28,12 +28,6 @@ class _CreateEventState extends State<CreateEvent> {
   String createEventUrl ="https://spray-dev.herokuapp.com/api/events/";
 
   void newEvent() async {
-    // if (_formKey.currentState!.validate()) {
-    //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    //     content: Text("Loading..."),
-    //     duration: Duration(milliseconds: 500),),);
-    //   print(eventName);
-
     //CREATING EVENT NAME
     var body = {
       "name": eventName
@@ -46,10 +40,6 @@ class _CreateEventState extends State<CreateEvent> {
           "x-auth-token": widget.token
         });
     var responseJson = jsonDecode(response.body);
-    print(responseJson);
-    setState(() {
-      code = responseJson['event_code'];
-    });
     if (response.statusCode != 201) {
       Alert(
         useRootNavigator: false,
@@ -69,7 +59,12 @@ class _CreateEventState extends State<CreateEvent> {
         ],
       ).show();
       throw HTTPException(response.statusCode, "Unable to create event...");
-    } else {
+    }
+    else {
+      print(responseJson);
+      setState(() {
+        code = responseJson['event_code'];
+      });
       //CHANGING EVENT STATUS TO ACTIVE
       String eventStatusUrl = "https://spray-dev.herokuapp.com/api/events/"
           "status?event_code=$code&event_status=active";
@@ -103,6 +98,7 @@ class _CreateEventState extends State<CreateEvent> {
         ).show();
         throw HTTPException(response.statusCode, "Unable to create event...");
       }
+
       else {
         Alert(
           useRootNavigator: false,
@@ -120,17 +116,13 @@ class _CreateEventState extends State<CreateEvent> {
                 style: TextStyle(color: Colors.white, fontSize: 12),
               ),
               onPressed: () {
-                pushNewScreenWithRouteSettings(
-                  context,
-                  settings: RouteSettings(name: EventDetails.routeName),
-                  screen: EventDetails(
-                    name: eventName,
-                    code: code,
-                  ),
-                  withNavBar: true,
-                  pageTransitionAnimation: PageTransitionAnimation.cupertino,
-                );
-                // Navigator.pop(context);
+                Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder:(context)=> EventDetails(
+                          name: eventName,
+                          code: code,
+                          token: widget.token,
+                       )));
               },
               width: 120,
             )
@@ -180,6 +172,7 @@ class _CreateEventState extends State<CreateEvent> {
                     // },
                     onChanged: (value){
                       eventName=value;
+                      print(eventName);
                     },
                     autofocus: true,
                     style: GoogleFonts.nunito(
@@ -209,6 +202,9 @@ class _CreateEventState extends State<CreateEvent> {
                   margin: EdgeInsets.symmetric(horizontal: 40.0),
                   child: DefaultButton(text: 'Next',
                       press: (){
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text("Creating event..."),
+                          duration: Duration(milliseconds: 4000),),);
                         newEvent();
                       }
                   ),

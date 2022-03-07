@@ -27,8 +27,8 @@ class ActionListTile extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(15))
       ),
       margin: EdgeInsets.fromLTRB(50,10,30,0),
-      padding: EdgeInsets.all(10),
-       width: double.infinity,
+      padding: EdgeInsets.all(getProportionateScreenWidth(10.0)),
+       width: getProportionateScreenWidth(270.0),
       child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children:[
@@ -52,7 +52,7 @@ class ActionListTile extends StatelessWidget {
             ),
             Container(
             //  margin: EdgeInsets.only(left: 50.0),
-           //   margin: EdgeInsets.only(left: 45.0),
+              margin: EdgeInsets.only(left: getProportionateScreenWidth(70.0)),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [

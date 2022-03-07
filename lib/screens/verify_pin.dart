@@ -101,7 +101,7 @@ class _VerifyPinState extends State<VerifyPin> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getPin();
+
     pin2FocusNode =FocusNode();
     pin3FocusNode =FocusNode();
     pin4FocusNode =FocusNode();
@@ -249,6 +249,7 @@ class _VerifyPinState extends State<VerifyPin> {
                           onChanged: (value){
                             confirmpin+=value;
                             pin4FocusNode.unfocus();
+                            getPin();
                             ScaffoldMessenger.of(context).showSnackBar( SnackBar(
                               content: Text("Processing data"),
                               duration: Duration(milliseconds: 4000), ), );
