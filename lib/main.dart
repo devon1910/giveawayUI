@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:giveawayui/routes.dart';
 import 'package:giveawayui/screens/onboarding.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
      // home: SplashScreen(),
       initialRoute: OnBoarding.routeName,

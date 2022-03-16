@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:giveawayui/components/settings.dart';
 import 'package:giveawayui/components/spray.dart';
 import 'package:giveawayui/screens/spray_amount.dart';
 import 'package:giveawayui/size_config.dart';
@@ -33,7 +34,7 @@ class _DashboardState extends State<Dashboard> {
         user: widget.user,
         trans:widget.trans
       ),
-      Container()
+      Settings()
     ];
   }
   List<PersistentBottomNavBarItem> _navBarsItems() {
@@ -60,11 +61,6 @@ class _DashboardState extends State<Dashboard> {
       ),
     ];
   }
-
-  void loadDialog() {
-
-  }
-
   @override
   Widget build(BuildContext context) {
     return PersistentTabView(

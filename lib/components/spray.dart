@@ -222,8 +222,8 @@ class _SprayState extends State<Spray> {
         print('event code: '+ecode);
 
         if (widget.trans.statusCode == 200) {
-          var T = json.decode(widget.trans.body);
-          Map<String, dynamic> transmap = T;
+          var t = json.decode(widget.trans.body);
+          Map<String, dynamic> transmap = t;
           data = transmap['data'];
           isTran = true;
         }
@@ -425,7 +425,7 @@ class _SprayState extends State<Spray> {
                         fontWeight: FontWeight.w600))),
           ),
         ],
-        SizedBox(height:getProportionateScreenHeight(80)),
+        SizedBox(height:getProportionateScreenHeight(5)),
         GestureDetector(
             onTap: loadDialog,
             child: Container(

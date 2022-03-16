@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:giveawayui/screens/landing_screen.dart';
 import 'package:giveawayui/screens/sign_in_screen.dart';
 import 'package:giveawayui/size_config.dart';
+import 'package:get/get.dart';
 
 import '../constants.dart';
 import '../components/DefaultButton.dart';
@@ -36,6 +37,7 @@ class _OnBoardingState extends State<OnBoarding> {
       "image": "assets/onboad1.png",
     }
   ];
+  PageController controller = PageController(initialPage: 0, keepPage: true);
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -48,6 +50,7 @@ class _OnBoardingState extends State<OnBoarding> {
               Expanded(
                   flex: 5,
                   child: PageView.builder(
+                    controller: controller,
                       onPageChanged: (value){
                         setState(() {
                           currentPage= value;
@@ -66,10 +69,9 @@ class _OnBoardingState extends State<OnBoarding> {
                     children: <Widget>[
                       Spacer(),
                       DefaultButton(
-                        text: "Next",
-                        press: (){
-                          Navigator.pushNamed(context, LandingScreen.routeName);
-                        },
+                        text:  currentPage == splashData.length-1 ?
+                        "Get started" : "Next",
+                        press:  () => changeSlide(context, currentPage+1),
                       ),
                       Spacer(flex: 1),
                       Row(
@@ -88,6 +90,16 @@ class _OnBoardingState extends State<OnBoarding> {
       ),
     );
 }
+  void changeSlide(context, index) {
+
+    if(currentPage != splashData.length - 1) {
+        controller.animateToPage(index, duration: Duration(milliseconds: 500),
+            curve: Curves.easeIn);
+        return;
+    }
+    Get.toNamed(LandingScreen.routeName);
+
+  }
 
   Container buildDot({required int index}) {
     return Container(
