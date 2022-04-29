@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:giveawayui/components/DefaultButton.dart';
 import 'package:giveawayui/screens/spray_amount.dart';
@@ -6,11 +8,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
+import '../components/page_title.dart';
+
 class EventCode extends StatefulWidget {
   static String routeName="/eventCode";
   final String token;
-  final events;
-  const EventCode({required this.token,required this.events});
+  final allEvents;
+
+  const EventCode({required this.token,required this.allEvents});
 
   @override
   _EventCodeState createState() => _EventCodeState();
@@ -18,11 +23,14 @@ class EventCode extends StatefulWidget {
 
 class _EventCodeState extends State<EventCode> {
   String eventCode="";
+  int eventsLength=0;
+  Map eventsMap={};
   void verifyEventCode(){
-    var events= widget.events;
+    print(eventsMap);
     if(eventCode.isNotEmpty){
-     for(int i=0;i<events.length;i++){
-       if(eventCode==events[i]['event_code'] && events[i]['status']=='ACTIVE'){
+     for(int i=0;i<eventsLength;i++) {
+       if (eventCode == eventsMap[i]['event_code'] &&
+           eventsMap[i]['status'] == 'ACTIVE') {
          pushNewScreen(context,
            //  settings: RouteSettings(name: SprayAmount.routeName),
            screen: SprayAmount(
@@ -32,8 +40,9 @@ class _EventCodeState extends State<EventCode> {
            withNavBar: true,
            pageTransitionAnimation: PageTransitionAnimation.cupertino,
          );
+         return;
        }
-       else{
+     }
          Alert(
            useRootNavigator: false,
            context: context,
@@ -51,10 +60,6 @@ class _EventCodeState extends State<EventCode> {
              )
            ],
          ).show();
-         break;
-       }
-       }
-
     }else{
       Alert(
         useRootNavigator: false,
@@ -76,6 +81,21 @@ class _EventCodeState extends State<EventCode> {
     }
   }
 
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if(widget.allEvents.statusCode == 200) {
+      final responseEJson = json.decode(widget.allEvents.body);
+      //converting data from data parameter to List Then to map
+      //to access its Length
+      print(responseEJson);
+      List events = responseEJson['data'];
+      eventsMap = events.asMap();
+      eventsLength=events.length;
+    }
+  }
   @override
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
@@ -84,17 +104,7 @@ class _EventCodeState extends State<EventCode> {
           key: _formKey,
           child: Column(
               children: [
-                Container(
-                  margin: EdgeInsets.only(top: 40.0),
-                  child: Center(
-                    child: Text('Event Code',
-                      style: GoogleFonts.nunito(
-                          textStyle: TextStyle(
-                              color: Color(0xff3F51B5), fontSize: 36.0, fontWeight: FontWeight.w800)) ,),
-                  ),
-                ),
-                // Center(
-
+               PageTitle(pageTitle: 'Event Code'),
                 SizedBox(height: getProportionateScreenHeight(20.0)),
                 Text('Event Event Code',
                     style: GoogleFonts.nunito(
@@ -106,12 +116,6 @@ class _EventCodeState extends State<EventCode> {
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: 40.0),
                   child: TextFormField(
-                    // validator: (value) {
-                    //   if (value == null || value.isEmpty) {
-                    //     return 'Please enter some text';
-                    //   }
-                    //   return null;
-                    // },
                     onChanged: (value){
                       eventCode=value;
                     },
@@ -138,7 +142,7 @@ class _EventCodeState extends State<EventCode> {
                     ),
                   ),
                 ),
-                SizedBox(height:getProportionateScreenHeight(100)),
+                SizedBox(height:getProportionateScreenHeight(70)),
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: 40.0),
                   child: DefaultButton(text: 'Next',

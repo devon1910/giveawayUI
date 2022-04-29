@@ -12,11 +12,12 @@ class ActionListTile extends StatelessWidget {
     required this.message,
     required this.date,
     required this.color,
+    required this.subHeadColor,
     this.img
   }) : super(key: key);
 
   String? heading, subheading,message,date,img;
-  int color;
+  int color,subHeadColor;
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +29,9 @@ class ActionListTile extends StatelessWidget {
       ),
       margin: EdgeInsets.fromLTRB(50,10,30,0),
       padding: EdgeInsets.all(getProportionateScreenWidth(10.0)),
-       width: getProportionateScreenWidth(270.0),
+      width: double.infinity,
       child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children:[
             Image.asset(img!),//
             Column(
@@ -45,32 +46,28 @@ class ActionListTile extends StatelessWidget {
                   textAlign: TextAlign.left,
                   style: GoogleFonts.titilliumWeb(//
                     textStyle: TextStyle(
-                        color: Color(0xFF485068),
+                        color: Color(subHeadColor),
                         fontSize: 15.0, fontWeight: FontWeight.w400),
                   ),)
               ],
             ),
-            Container(
-            //  margin: EdgeInsets.only(left: 50.0),
-              margin: EdgeInsets.only(left: getProportionateScreenWidth(70.0)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(message!,
-                      style: GoogleFonts.titilliumWeb(
-                        textStyle: TextStyle(
-                            color: Color(0xFF3F51B5), fontSize: 15.0, fontWeight: FontWeight.w400),
-                      ),
-                     // textAlign: TextAlign.right
-                  ),
-                  Text(date!,
-                    //textAlign: TextAlign.right,//
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(message!,
                     style: GoogleFonts.titilliumWeb(
                       textStyle: TextStyle(
-                          color: Color(0xFF485068), fontSize: 15.0, fontWeight: FontWeight.w400),
-                    ),)
-                ],
-              ),
+                          color: Color(0xFF3F51B5), fontSize: 15.0, fontWeight: FontWeight.w400),
+                    ),
+                   // textAlign: TextAlign.right
+                ),
+                Text(date!,
+                  //textAlign: TextAlign.right,//
+                  style: GoogleFonts.titilliumWeb(
+                    textStyle: TextStyle(
+                        color: Color(0xFF485068), fontSize: 15.0, fontWeight: FontWeight.w400),
+                  ),)
+              ],
             ),
             SizedBox(height: getProportionateScreenHeight(5.0))
           ]

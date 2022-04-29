@@ -333,31 +333,33 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               press: () => _submit()
                             ),
                             SizedBox(height: getProportionateScreenHeight(10)),
-                            Container(
-                              margin:EdgeInsets.only(left:60.0),
-                              child: Row(
-                                children:[
-                                  Text('Already have an account?',
-                                      textAlign: TextAlign.right,
-                                      style: GoogleFonts.titilliumWeb(
-                                          textStyle: TextStyle(
-                                              color: Color(0xFF3F51B5), fontSize: 20.0, fontWeight: FontWeight.w400))
-
-                                  ),
-                                  SizedBox( width: getProportionateScreenWidth(10),),
-                                  GestureDetector(
-                                    onTap: (){
-                                      Navigator.pushNamed(context, SignInScreen.routeName);
-                                    },
-                                    child: Text('Sign In',
-                                        textAlign: TextAlign.right,
+                            Center(
+                              child: Container(
+                                //margin:EdgeInsets.only(left:60.0),
+                                child: Row(
+                                  children:[
+                                    Text('Already have an account?',
+                                        textAlign: TextAlign.center,
                                         style: GoogleFonts.titilliumWeb(
                                             textStyle: TextStyle(
-                                                color: Color(0xFF3F51B5), fontSize: 20.0, fontWeight: FontWeight.w600))
+                                                color: Color(0xFF3F51B5), fontSize: 20.0, fontWeight: FontWeight.w400))
 
                                     ),
-                                  ),
-                              ]),
+                                    SizedBox( width: getProportionateScreenWidth(10),),
+                                    GestureDetector(
+                                      onTap: (){
+                                        Navigator.pushNamed(context, SignInScreen.routeName);
+                                      },
+                                      child: Text('Sign In',
+                                          textAlign: TextAlign.right,
+                                          style: GoogleFonts.titilliumWeb(
+                                              textStyle: TextStyle(
+                                                  color: Color(0xFF3F51B5), fontSize: 20.0, fontWeight: FontWeight.w600))
+
+                                      ),
+                                    ),
+                                ]),
+                              ),
                             )
                           ],
                         )

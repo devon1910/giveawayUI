@@ -1,8 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:giveawayui/screens/updateProfile.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:settings_ui/settings_ui.dart';
 class Settings extends StatefulWidget {
-  const Settings({Key? key}) : super(key: key);
+  Settings({required this.token});
+
+  final token;
 
   @override
   _SettingsState createState() => _SettingsState();
@@ -44,22 +48,56 @@ class _SettingsState extends State<Settings> {
             title: Text('Account'),
             tiles: <SettingsTile>[
               SettingsTile.navigation(
+                    onPressed: (value){
+                      pushNewScreenWithRouteSettings(context,
+                          settings: RouteSettings(name: UpdateProfile.routeName),
+                          screen: UpdateProfile(
+                              token: widget.token,
+                              parameter: "username",
+                              icon: Icons.person,
+                              keypadType: TextInputType.name),
+                          withNavBar: false,
+                          pageTransitionAnimation:
+                          PageTransitionAnimation.cupertino);
+                    },
                 leading: Icon(Icons.person),
                 title: Text('Username'),
                  value: Text('Cheif'),
               ),
               SettingsTile.navigation(
+                onPressed: (value){
+                  pushNewScreenWithRouteSettings(context,
+                      settings: RouteSettings(name: UpdateProfile.routeName),
+                      screen: UpdateProfile(
+                          token: widget.token,
+                          parameter: "phone",
+                          icon: Icons.phone,
+                          keypadType: TextInputType.phone,),
+                      withNavBar: false,
+                      pageTransitionAnimation:
+                      PageTransitionAnimation.cupertino);
+                },
                 leading: Icon(Icons.phone),
                 title: Text('Phone Number'),
                // value: Text('English'),
               ),
               SettingsTile.navigation(
-                leading: Icon(Icons.email),
-                title: Text('Email Address'),
+                onPressed: (value){
+                  pushNewScreenWithRouteSettings(context,
+                      settings: RouteSettings(name: UpdateProfile.routeName),
+                      screen: UpdateProfile(
+                          token: widget.token,
+                          parameter: "pin",
+                          icon: Icons.lock,
+                          keypadType: TextInputType.number,),
+                      withNavBar: false,
+                      pageTransitionAnimation:
+                      PageTransitionAnimation.cupertino);
+                },
+                leading: Icon(Icons.password_sharp),
+                title: Text('Transaction Pin'),
                 // value: Text('English'),
               ),
-
-
             ],
           ),
           SettingsSection(
@@ -101,7 +139,6 @@ class _SettingsState extends State<Settings> {
           ),
         ],
         darkTheme: SettingsThemeData()
-
         ),
       );
   }

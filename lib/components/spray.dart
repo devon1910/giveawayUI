@@ -5,13 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:giveawayui/components/Scan.dart';
 import 'package:giveawayui/screens/Transactions.dart';
+import 'package:giveawayui/screens/all_events.dart';
 import 'package:giveawayui/screens/create_event.dart';
 import 'package:giveawayui/screens/dashboard.dart';
+import 'package:giveawayui/screens/deposit.dart';
 import 'package:giveawayui/screens/event_code.dart';
 import 'package:giveawayui/screens/receive.dart';
 import 'package:giveawayui/screens/send.dart';
 import 'package:http/http.dart' as http;
-import 'package:giveawayui/screens/spray_amount.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -21,14 +22,15 @@ import '../size_config.dart';
 import 'ActionListTile.dart';
 import 'ActionTile.dart';
 import 'loadDash.dart';
-import 'loadSpray.dart';
+
 
 class Spray extends StatefulWidget {
   const Spray({required this.token,
     required this.trans,
     required this.user,
-    required this.events});
-  final  trans,events,user;
+    required this.userEvent,
+    required this.allEvents});
+  final  trans,user,userEvent,allEvents;
   final String token;
   @override
   _SprayState createState() => _SprayState();
@@ -36,12 +38,16 @@ class Spray extends StatefulWidget {
 
 class _SprayState extends State<Spray> {
   bool isTran = false; //checks if Transaction exists
-  int amount = 0;
+  dynamic amount;
+  int virtualAmount=0;
   String eventStatus = "";
   String username = "";
   String ecode="";
   bool isActive=false;
-
+  int transLength=0;
+  String transType="";
+  int subColor=0xFF006400;
+  String img="assets/arrow-down-right-circle.png";
   var transData,data;
   void endEvent() async{
     String endEventUrl="https://spray-dev.herokuapp.com/api/events"
@@ -56,7 +62,7 @@ class _SprayState extends State<Spray> {
     ScaffoldMessenger.of(context).showSnackBar( SnackBar(
       content: Text("Loading..."),
       duration: Duration(milliseconds: 4000), ), );
-    if(response.statusCode ==500){
+    if(response.statusCode == 500){
       Alert(
         useRootNavigator: false,
         context: context,
@@ -106,98 +112,48 @@ class _SprayState extends State<Spray> {
       throw HTTPException(response.statusCode, "Unable to end event...");
     }
   }
-  void loadDialog() {
+  void loadDialog(){
     Alert(
       image: Image.asset('assets/Group.png'),
       useRootNavigator: false,
       context: context,
       // type: AlertType.info,
       //  title: "RFLUTTER ALERT",
-      desc: "What do you wanna do?",
+      desc: "How do you wanna spray!?",
       buttons: [
-        if (eventStatus == 'ACTIVE')
-          ...[
-            DialogButton(
-              child: Text(
-                "End event",
-                style: TextStyle(color: Colors.white, fontSize: getProportionateScreenWidth(16)),
-              ),
-              onPressed: () {
-                endEvent();
-              },
-              color: Color.fromRGBO(0, 179, 134, 1.0),
-            ),
-          ]
-        else ...[
-          DialogButton(
-            child: Text(
-              "Create an event",
-              style: TextStyle(color: Colors.white, fontSize: getProportionateScreenWidth(14)),
-            ),
-            onPressed: () {
-              pushNewScreen(
-                  context,
-                //  settings: RouteSettings(name: CreateEvent.routeName),
-                  screen: CreateEvent(
-                      widget.token),
-                  withNavBar: false,
-                  pageTransitionAnimation: PageTransitionAnimation.cupertino);
-            },
-            color: Color.fromRGBO(0, 179, 134, 1.0),
+        DialogButton(
+          padding: EdgeInsets.all(10),
+          child: Text(
+            "Scan QR code",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                color: Colors.white, fontSize: getProportionateScreenWidth(16)),
           ),
-        ],
+          onPressed: () {
+            pushNewScreenWithRouteSettings(context,
+                settings: RouteSettings(name: CreateEvent.routeName),
+                screen: Send(token: widget.token),
+                withNavBar: true,
+                pageTransitionAnimation:
+                PageTransitionAnimation.cupertino);
+          },
+          color: Colors.black,
+        ),
         DialogButton(
           child: Text(
-            "Spray an Event",
+            "Enter Event code",
+            textAlign: TextAlign.center,
             style: TextStyle(color: Colors.white, fontSize: getProportionateScreenWidth(14)),
           ),
           onPressed: () {
-            Alert(
-              image: Image.asset('assets/Group.png'),
-              useRootNavigator: false,
-              context: context,
-              // type: AlertType.info,
-              //  title: "RFLUTTER ALERT",
-              desc: "How do you wanna spray!?",
-              buttons: [
-                DialogButton(
-                  child: Text(
-                    "Scan QR code",
-                    style: TextStyle(
-                        color: Color.fromRGBO(0, 179, 134, 1.0), fontSize: getProportionateScreenWidth(16)),
-                  ),
-                  onPressed: () {
-                    pushNewScreenWithRouteSettings(context,
-                        settings: RouteSettings(name: CreateEvent.routeName),
-                        screen: Send(token: widget.token),
-                        withNavBar: true,
-                        pageTransitionAnimation:
-                            PageTransitionAnimation.cupertino);
-                  },
-                  color: Colors.black,
-                ),
-                DialogButton(
-                  child: Text(
-                    "Enter Event code",
-                    style: TextStyle(color: Colors.white, fontSize: getProportionateScreenWidth(14)),
-                  ),
-                  onPressed: () {
-                    pushNewScreen(context,
-                      //  settings: RouteSettings(name: EventCode.routeName),
-                        screen: EventCode(
-                            token: widget.token,
-                            events: widget.events),
-                        withNavBar: true,
-                        pageTransitionAnimation:
-                            PageTransitionAnimation.cupertino);
-                  },
-                  gradient: LinearGradient(colors: [
-                    Color.fromRGBO(116, 116, 191, 1.0),
-                    Color.fromRGBO(52, 138, 199, 1.0)
-                  ]),
-                )
-              ],
-            ).show();
+            pushNewScreen(context,
+                //  settings: RouteSettings(name: EventCode.routeName),
+                screen: EventCode(
+                    token: widget.token,
+                    allEvents: widget.allEvents),
+                withNavBar: true,
+                pageTransitionAnimation:
+                PageTransitionAnimation.cupertino);
           },
           gradient: LinearGradient(colors: [
             Color.fromRGBO(116, 116, 191, 1.0),
@@ -207,26 +163,45 @@ class _SprayState extends State<Spray> {
       ],
     ).show();
   }
+  void updateActionTile(){
+    if(transType=="SEND"){
+      subColor=0xFFDC143C;
+      img="assets/Bitcoin.png";
+
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-      int lastIndex=widget.events.length-1;
-      print("Event Status: $lastIndex");
       setState(() {
-        amount = widget.user['data']['amount'];
+       // virtualAmount=widget.user['data']['amount'];
+        amount=widget.user['data']['amount'];
+      //  amount = virtualAmount.toDouble();
         username = widget.user['data']['username'];
-        eventStatus = widget.events[lastIndex]['status'];
-        print('eventStatus: '+eventStatus);
-        ecode=  widget.events[lastIndex]['event_code'];
-        print('event code: '+ecode);
-
+        if(widget.userEvent.statusCode == 200) {
+          final responseEJson = json.decode(widget.userEvent.body);
+          //converting data from data parameter to List Then to map
+          //to access its Length
+          List dataLength = responseEJson['data'];
+          Map eventsMap = dataLength.asMap();
+          int lastIndex=dataLength.length-1;
+          eventStatus = eventsMap[lastIndex]['status'];
+          print('event Status: '+eventStatus);
+          ecode=  eventsMap[lastIndex]['event_code'];
+          print('event code: '+ecode);
+        }
         if (widget.trans.statusCode == 200) {
-          var t = json.decode(widget.trans.body);
-          Map<String, dynamic> transmap = t;
-          data = transmap['data'];
+          var transactions = json.decode(widget.trans.body);
+          Map<String, dynamic> transMap = transactions;
+          List transList=transMap['data'];
+          data = transMap['data'];
+          transLength=transList.length;
+          transType=data[transLength-1]['type'];
           isTran = true;
         }
+        updateActionTile();
       });
     }
 
@@ -252,7 +227,7 @@ class _SprayState extends State<Spray> {
           child: Column(children: [
             Container(
               padding: EdgeInsets.all(20.0),
-              margin: EdgeInsets.only(top: 15.0),
+              margin: EdgeInsets.only(top: 25.0),
               child: Row(
                 // crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -295,7 +270,7 @@ class _SprayState extends State<Spray> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('\$$amount',
+                    Text('\$${amount.toStringAsFixed(2)}',
                         textAlign: TextAlign.start,
                         style: GoogleFonts.nunito(
                             textStyle: TextStyle(
@@ -318,7 +293,7 @@ class _SprayState extends State<Spray> {
         //SizedBox(height: getProportionateScreenHeight(5.0),),
         Container(
           //   margin: EdgeInsets.only(bottom: 30.0),
-          padding: EdgeInsets.fromLTRB(60, 20, 50, 50),
+          padding: EdgeInsets.fromLTRB(60, 20, 50, 30),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -327,7 +302,13 @@ class _SprayState extends State<Spray> {
                 image: Image.asset('assets/deposit.png'),
                 text: 'Deposit',
                 onClick: () {
-
+                  pushNewScreen(
+                      context,
+                      //  settings: RouteSettings(name: CreateEvent.routeName),
+                      screen: Deposit(
+                          token: widget.token),
+                      withNavBar: false,
+                      pageTransitionAnimation: PageTransitionAnimation.cupertino);
                 },
               ),
               ActionTile(
@@ -363,7 +344,6 @@ class _SprayState extends State<Spray> {
                 image: Image.asset('assets/redeem.png'),
                 text: 'Redeem',
                 onClick: () {
-
                 },
               ),
             ],
@@ -373,7 +353,7 @@ class _SprayState extends State<Spray> {
           //  color: Colors.red,
           margin: EdgeInsets.only(right: getProportionateScreenWidth(120)),
           child: Text(
-            'Latest transactions',
+            'Latest transaction',
             textAlign: TextAlign.start,
             style: GoogleFonts.titilliumWeb(
               textStyle: TextStyle(
@@ -385,11 +365,20 @@ class _SprayState extends State<Spray> {
         ),
         if (isTran) ...[
           ActionListTile(
-              img: 'assets/arrow-up-right-circle.png',
+              img: img,
               heading: '${data[0]['transaction_amount']} chi',
-              subheading: '${data[0]['type']}',
+              subheading: '$transType',
+              subHeadColor: subColor,
               message: '${data[0]['payment_method']}',
               date: '${data[0]['transaction_date']}',
+              color: 0xFFEDF1F9),
+          ActionListTile(
+              img: img,
+              heading: '${data[1]['transaction_amount']} chi',
+              subheading: '$transType',
+              subHeadColor: subColor,
+              message: '${data[1]['payment_method']}',
+              date: '${data[1]['transaction_date']}',
               color: 0xFFEDF1F9),
           SizedBox(height: getProportionateScreenHeight(15)),
           GestureDetector(
@@ -397,7 +386,9 @@ class _SprayState extends State<Spray> {
               pushNewScreenWithRouteSettings(
                 context,
                 settings: RouteSettings(name: Transactions.routeName),
-                screen: Transactions(),
+                screen: Transactions(
+                  trans:widget.trans
+                ),
                 withNavBar: true,
                 pageTransitionAnimation: PageTransitionAnimation.cupertino,
               );
@@ -411,53 +402,86 @@ class _SprayState extends State<Spray> {
           ),
         ] else ...[
           SizedBox(
-            height: getProportionateScreenHeight(20),
+            height: getProportionateScreenHeight(40),
           ),
           Image.asset('assets/Mask.png', height: 50.0, color: Colors.grey),
-          SizedBox(height: getProportionateScreenHeight(20)),
+          SizedBox(height: getProportionateScreenHeight(50)),
           Container(
-            margin: EdgeInsets.fromLTRB(0, 0, 150, 0),
-            child: Text('No Transactions',
-                style: GoogleFonts.nunito(
-                    textStyle: TextStyle(
-                        color: Color(0xFF3F51B5),
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w600))),
+            //margin: EdgeInsets.fromLTRB(0, 0, 150, 0),
+            child: Center(
+              child: Text('No Transactions',
+                  style: GoogleFonts.nunito(
+                      textStyle: TextStyle(
+                          color: Color(0xFF3F51B5),
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w600))),
+            ),
           ),
         ],
-        SizedBox(height:getProportionateScreenHeight(5)),
-        GestureDetector(
-            onTap: loadDialog,
-            child: Container(
-                //width: double.infinity,
-                margin: EdgeInsets.fromLTRB(
-                    0, getProportionateScreenHeight(30.0), 0, 0),
-                padding: EdgeInsets.all(7.0),
+        SizedBox(height:getProportionateScreenHeight(40)),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            GestureDetector(
+              onTap: (){
+                if(eventStatus=="ACTIVE")
+                  {
+                    endEvent();
+                  }else {
+                  pushNewScreen(
+                      context,
+                      //  settings: RouteSettings(name: CreateEvent.routeName),
+                      screen: CreateEvent(widget.token),
+                      withNavBar: false,
+                      pageTransitionAnimation: PageTransitionAnimation.cupertino);
+
+                }
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 30,vertical: 20),
+                margin: EdgeInsets.only(left: getProportionateScreenWidth(20)),
                 decoration: BoxDecoration(
                     boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                        offset: Offset(0, 3), // changes position of shadow
-                      ),
-                    ],
-                    borderRadius: BorderRadius.circular(50),
-                    color: Color(0xFFFFFFFF)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Image.asset(
-                      'assets/Group.png',
-                      color: Color.fromRGBO(52, 138, 199, 1.0),
-                    ),
-                  ],
-                ))),
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.5),
+                                    spreadRadius: 5,
+                                    blurRadius: 7,
+                                    offset: Offset(0, 3), // changes position of shadow
+                                  ),
+                                ],
+                    color: Colors.white,
+                  borderRadius: BorderRadius.circular(8)
+                ),
+                child: Text(eventStatus=="ACTIVE" ? "End Event" :  "Create Event",
+                    style: GoogleFonts.inter(
+                        textStyle: TextStyle(
+                            color: Color(0xFF38A3A5),
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w600))),
+              ),
+            ),
+            GestureDetector(
+              onTap: (){
+                loadDialog();
+              },
+              child: Container(
+                margin: EdgeInsets.only(left: getProportionateScreenWidth(10)),
+                padding: EdgeInsets.symmetric(horizontal: 30,vertical: 20),
+                decoration: BoxDecoration(
+                  color: Color(0xFF3F51B5),
+                    borderRadius: BorderRadius.circular(8)
+                ),
+                child: Text('Join Event',
+                style: GoogleFonts.inter(
+                    textStyle: TextStyle(
+                        color: Color(0xFFFFFFFF),
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w600))),
+              ),
+            ),
+          ],
+        ),
         SizedBox(height: getProportionateScreenHeight(10)),
-        Text(
-          'Spray!',
-          style: TextStyle(color: Color(0xFF3F51B5)),
-        )
       ]),
     );
   }

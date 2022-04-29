@@ -3,20 +3,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:giveawayui/components/settings.dart';
 import 'package:giveawayui/components/spray.dart';
-import 'package:giveawayui/screens/spray_amount.dart';
-import 'package:giveawayui/size_config.dart';
+import 'package:giveawayui/screens/all_events.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 
-import 'create_event.dart';
 
 class Dashboard extends StatefulWidget {
-  Dashboard({required this.token,
+  Dashboard( { required this.token,
     required this.trans,
-  required this.user,
-  required this.events});
-  final String? token;
-  final  trans,events,user;
+    required this.userEvent,
+    required this.user,
+    required this.allEvents});
+  final  trans,userEvent,allEvents,user,token;
 
   static String routeName="/dashboard";
 
@@ -29,12 +26,14 @@ class _DashboardState extends State<Dashboard> {
   PersistentTabController _controller = PersistentTabController(initialIndex: 0);
   List<Widget> _buildScreens() {
     return [
-      Spray(token: widget.token!,
-        events: widget.events,
+      Spray(token: widget.token,
+        userEvent: widget.userEvent,
+        allEvents: widget.allEvents,
         user: widget.user,
         trans:widget.trans
       ),
-      Settings()
+      AllEvents(token: widget.token,allEvents: widget.allEvents),
+      Settings(token: widget.token)
     ];
   }
   List<PersistentBottomNavBarItem> _navBarsItems() {
@@ -51,9 +50,20 @@ class _DashboardState extends State<Dashboard> {
         inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
       PersistentBottomNavBarItem(
+         // icon: ImageIcon(AssetImage(
+         //     'assets/Group.png'
+         // ),),
+        icon: Icon(
+          Icons.monetization_on
+        ),
+        title: ("Events"),
+        activeColorPrimary: Color.fromRGBO(52, 138, 199, 1.0),
+        inactiveColorPrimary: CupertinoColors.systemGrey,
+      ),
+      PersistentBottomNavBarItem(
        // icon: Image.asset('assets/settings.png'),
         icon: Icon(
-          Icons.settings_rounded
+          Icons.settings
         ),
         title: ("Settings"),
         activeColorPrimary: Color.fromRGBO(52, 138, 199, 1.0),

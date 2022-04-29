@@ -1,15 +1,9 @@
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:giveawayui/components/spray.dart';
 import 'package:giveawayui/screens/dashboard.dart';
 import 'package:http/http.dart' as http;
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-
-import '../http_exception.dart';
 
 class LoadDash extends StatefulWidget {
   String token;
@@ -20,17 +14,25 @@ class LoadDash extends StatefulWidget {
 }
 
 class _LoadDashState extends State<LoadDash> {
-  String transUrl = "https://spray-dev.herokuapp.com/api/transactions/";
+  String transUrl = "https://spray-dev.herokuapp.com/api/transactions/me?limit=5&page=1";
+  String userUrl="https://spray-dev.herokuapp.com/api/users/";
+  String userEventsUrl="https://spray-dev.herokuapp.com/api/events/me";
+  String allEventsUrl="https://spray-dev.herokuapp.com/api/events/?limit=5&page=1";
+
+
+
   late List<dynamic> data;
 
   Future<dynamic> getUser() async {
     // GETTING USER
     final response = await http
-        .get(Uri.parse('https://spray-dev.herokuapp.com/api/users/'), headers: {
+        .get(Uri.parse(userUrl), headers: {
       'x-auth-token': widget.token,
     });
-    final responseJson = jsonDecode(response.body);
-    return responseJson;
+    if(response.statusCode==200) {
+      final responseJson = jsonDecode(response.body);
+      return responseJson;
+    }
   }
 
   Future<dynamic> getTrans() async {
@@ -42,32 +44,36 @@ class _LoadDashState extends State<LoadDash> {
 
     return responseT;
   }
-  Future<dynamic> getEvents() async {
+  Future<dynamic> getUserEvent() async {
     //GETTING EVENTS
     final responseE = await http.get(
-        Uri.parse('https://spray-dev.herokuapp.com/api/events/'),
+        Uri.parse(userEventsUrl),
         headers: {
           'x-auth-token': widget.token,
         });
-    final responseEJson = json.decode(responseE.body);
-    //converting data from data parameter to List Then to map
-    //to access its Length
-    List dataLength = responseEJson['data'];
-    Map mapDataLength = dataLength.asMap();
-    return mapDataLength;
+    return responseE;
+  }
+  Future<dynamic> getAllEvents() async {
+    //GETTING EVENTS
+    final responseE = await http.get(
+        Uri.parse(allEventsUrl));
+    print(responseE);
+    return responseE;
   }
 
   void getData()async{
     var user=await getUser();
-    var events= await getEvents();
+    var userEvent= await getUserEvent();
     var trans= await getTrans();
+    var allEvents= await getAllEvents();
 
     Navigator.of(context).push(
         MaterialPageRoute(
             builder:(context)=> Dashboard(
                 token: widget.token,
                 user:  user,
-                events: events,
+                userEvent: userEvent,
+                allEvents: allEvents,
                 trans: trans)));
   }
 

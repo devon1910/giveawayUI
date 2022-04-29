@@ -11,7 +11,8 @@ import 'confirm_pin2.dart';
 
 class SprayAmount extends StatefulWidget {
   static String routeName="/spray_amount";
-  const SprayAmount({required this.ecode,required this.token});
+  const SprayAmount({
+    required this.ecode,required this.token});
   final String? ecode;
   final String token;
   @override
@@ -23,8 +24,6 @@ class _SprayAmount extends State<SprayAmount> {
   String times="";
   var amountInt;
   var timesInt;
-  // assert(myInt is int);
-  // print(myInt);
 
   @override
   Widget build(BuildContext context) {
@@ -33,17 +32,17 @@ class _SprayAmount extends State<SprayAmount> {
           child: Column(
               children: [
                 Container(
-                  margin: EdgeInsets.only(top: 40.0),
+                  margin: EdgeInsets.only(top:getProportionateScreenHeight(80)),
                   child: Center(
                     child: Text('Spray Amount',
                       style: GoogleFonts.nunito(
                           textStyle: TextStyle(
-                              color: Color(0xff3F51B5), fontSize: 36.0, fontWeight: FontWeight.w800)) ,),
+                              color: Color(0xff3F51B5), fontSize: 36.0, fontWeight: FontWeight.w800)),),
                   ),
                 ),
                 Center(
                     child: Text('Select the amount you want to send and the\n number of times '
-                        'you want to spray',
+                        'you want to spray...',
                       style: GoogleFonts.nunito(
                           textStyle: TextStyle(
                               color: Color(0xff243656), fontSize: 14.0, fontWeight: FontWeight.w400)),)),
@@ -64,7 +63,7 @@ class _SprayAmount extends State<SprayAmount> {
                   child: TextFormField(
                     onChanged: (value){
                       amount=value;
-                      amountInt= int.parse(amount);
+                      amountInt= double.parse(amount);
                     },
 
                     autofocus: true,
@@ -109,7 +108,7 @@ class _SprayAmount extends State<SprayAmount> {
                   child: TextFormField(
                     onChanged: (value){
                       times = value;
-                      timesInt= int.parse(times);
+                      timesInt= double.parse(times);
                     },
                     autofocus: true,
                     style: GoogleFonts.nunito(
@@ -142,13 +141,13 @@ class _SprayAmount extends State<SprayAmount> {
                   child: DefaultButton(text: 'Next', press: (){
                     pushNewScreenWithRouteSettings(
                       context,
-                      settings: RouteSettings(name: ConfirmPin2.routeName),
+                      settings: RouteSettings(name: VerifyPin.routeName),
                       screen: VerifyPin(
                           token: widget.token,
                           ecode: widget.ecode,
                           amount: amountInt,
                           times: timesInt),
-                      withNavBar: true,
+                      withNavBar: false,
                       pageTransitionAnimation: PageTransitionAnimation.cupertino,
                     );
                   }

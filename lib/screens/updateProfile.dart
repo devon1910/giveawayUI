@@ -1,54 +1,76 @@
-
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:giveawayui/components/DefaultButton.dart';
-import 'package:giveawayui/screens/sign_in_screen.dart';
 import 'package:giveawayui/size_config.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:giveawayui/screens/otp.dart';
 import 'package:http/http.dart' as http;
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
-class ForgotPassword extends StatefulWidget {
-  const ForgotPassword({Key? key}) : super(key: key);
-  static String routeName="/forgotPassword";
-  @override
-  State<ForgotPassword> createState() => _ForgotPasswordState();
+import '../components/loadDash.dart';
+
+
+class UpdateProfile extends StatefulWidget {
+  static String routeName="/resetUsername";
+  UpdateProfile({required this.token, required this.parameter,required this.icon,this.keypadType});
+  final String token;
+  final String parameter;
+  final IconData icon;
+  TextInputType? keypadType;
+
+  State<UpdateProfile> createState() => _UpdateProfileState();
 }
 
-class _ForgotPasswordState extends State<ForgotPassword> {
-  String resetPasswordUrl= "https://spray-dev.herokuapp.com/api/users/forgot-password";
-  void resetPassword() async{
-    var response = await http.post(
-        Uri.parse(resetPasswordUrl),
+class _UpdateProfileState extends State<UpdateProfile> {
+  String newValue="";
+  void updateUserProfile() async{
+    String resetUrl= "https://spray-dev.herokuapp.com/api/users/";
+    var body = {
+      "${widget.parameter}": newValue
+    };
+    var response = await http.put(
+        Uri.parse(resetUrl),
+        body: json.encode(body),
         headers: {
           "Content-Type": "application/json",
-          // "x-auth-token": widget.token
+          "x-auth-token": widget.token
         });
     if(response.statusCode==200){
+      ScaffoldMessenger.of(context).showSnackBar( SnackBar(
+        content: Text("Loading..."),
+        duration: Duration(milliseconds: 4000), ), );
       Alert(
         useRootNavigator: false,
         context: context,
-        title: "Password reset link sent, Please check your mail.",
+        title: "${widget.parameter} Updated",
         //desc: "",
         image: Image.asset(
-          "assets/finalcheck.png",
-          color: Colors.blue,),
+            "assets/finalcheck.png",
+            color: Colors.green),
         buttons: [
           DialogButton(
             color: Colors.blue,
             child: Text(
-              "Okay",
+              "OK",
               style: TextStyle(color: Colors.white, fontSize: 12),
             ),
             onPressed: () {
-              Navigator.pushNamed(context, SignInScreen.routeName);
+              pushNewScreen(
+                  context,
+                  //  settings: RouteSettings(name: CreateEvent.routeName),
+                  screen: LoadDash(
+                    token: widget.token,),
+                  withNavBar: false,
+                  pageTransitionAnimation: PageTransitionAnimation.cupertino);
             },
             width: 120,
           )
         ],
       ).show();
     }
+
+
   }
   @override
   Widget build(BuildContext context) {
@@ -66,25 +88,11 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         left: 30.0, bottom: 30.0),
                     child: Column(
                         children:[
-                         IconButton(
-                             onPressed: (){
-                               Navigator.pop(context);
-                             },
-                             icon: Icon(
-                               Icons.arrow_back_ios
-                             )),
                           Text(
-                            'Forgot Password ?',
+                            'Reset ${widget.parameter} ',
                             style: GoogleFonts.nunito(
                                 textStyle: TextStyle(
                                     color: Color(0xff000000), fontSize: 25.0, fontWeight: FontWeight.w800)),),
-                          SizedBox(height: getProportionateScreenHeight(10)),
-                          Text("Enter your registered email address to \n"
-                              "receive password reset instruction",
-                            style: GoogleFonts.titilliumWeb(
-                                textStyle: TextStyle(
-                                    color: Color(0xff485068), fontSize: 14.0, fontWeight: FontWeight.w400)) ,
-                            textAlign: TextAlign.center,)
                         ]
                     )
                 ),
@@ -110,7 +118,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // SizedBox(height:getProportionateScreenHeight(15)),
-                      Text('Email Address',
+                      Text('${widget.parameter}',
                           style: GoogleFonts.nunito(
                               textStyle: TextStyle(
                                   color: Color(0xff000000),
@@ -118,17 +126,22 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                   fontWeight: FontWeight.w400))),
                       SizedBox(height:getProportionateScreenHeight(15)),
                       TextFormField(
+                        onChanged: (value){
+                          newValue= value;
+                        },
+                        autofocus: true,
                         style: TextStyle(
+                            fontSize: 22.0
                           //      backgroundColor: Color(0xFFE4E4E4)
                         ),
-                        keyboardType: TextInputType.emailAddress,
+                        keyboardType: widget.keypadType,
                         decoration: InputDecoration(
                           fillColor: Color(0xFFE4E4E4),
                           filled: true,
                           prefixIcon: Icon(
-                            Icons.mail_outline,
+                            widget.icon,
                             color: Colors.black,),
-                          hintText: 'someone@example.com',
+                          // hintText: 'someone@example.com',
                           contentPadding: EdgeInsets.symmetric(
                               horizontal: 1,
                               vertical: 1
@@ -138,7 +151,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                             borderRadius: BorderRadius.circular(10),
                             // borderSide: BorderSide(color: Colors.red)
                             gapPadding: 10,
-
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
@@ -149,9 +161,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       ),
                       SizedBox(height:getProportionateScreenHeight(60)),
                       DefaultButton(
-                        text: "Reset Password",
+                        text: "Reset ${widget.parameter}",
                         press: (){
-                          Navigator.pushNamed(context, Otp.routeName);
+                          updateUserProfile();
                         },
                       ),
                     ],
@@ -164,4 +176,3 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     );
   }
 }
-
