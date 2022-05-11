@@ -73,7 +73,7 @@ class _DepositState extends State<Deposit> {
       );
       Navigator.of(context).push(
           MaterialPageRoute(
-              builder:(context)=> LoadDash(token: widget.token)));
+              builder:(context)=> LoadDash()));
     }
   }
   @override

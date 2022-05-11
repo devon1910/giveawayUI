@@ -1,7 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'models/UserModel.dart';
+import 'app_settings.dart';
 
 final primaryGiveawayStyle = GoogleFonts.nunito(
     textStyle: TextStyle(
@@ -33,3 +37,18 @@ final circleStyle= LinearGradient(
     end: FractionalOffset.bottomCenter,
     tileMode: TileMode.repeated
 );
+
+Map<String, dynamic> appSettings = {};
+Map<String, dynamic> defaultSettings = {
+  "onBoarding": true,
+  "isLogin": false,
+};
+
+late UserModel userModel;
+//to update or read the get_storage data
+late AppSettings generalAppSettings;
+//to initialize the get storage
+late GetStorage appStorage;
+late GetStorage userStorage;
+
+

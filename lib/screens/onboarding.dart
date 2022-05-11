@@ -40,7 +40,7 @@ class _OnBoardingState extends State<OnBoarding> {
   PageController controller = PageController(initialPage: 0, keepPage: true);
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
+    SizeConfig.init(Get.context!);
     return Scaffold(
       body: SafeArea(
         child: SizedBox(
@@ -97,7 +97,9 @@ class _OnBoardingState extends State<OnBoarding> {
             curve: Curves.easeIn);
         return;
     }
-    Get.toNamed(LandingScreen.routeName);
+
+    generalAppSettings.updateSettings(setting: {"onBoarding": false});
+    Get.offAllNamed(LandingScreen.routeName);
 
   }
 

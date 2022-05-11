@@ -134,7 +134,7 @@ class _EventDetailsState extends State<EventDetails> {
              onPressed:  (){
                Navigator.of(context).push(
                    MaterialPageRoute(
-                       builder:(context)=> LoadDash(token: widget.token)));
+                       builder:(context)=> LoadDash()));
 
              },
              child: Text('Home'))

@@ -54,7 +54,7 @@ class _SprayScreen extends State<SprayScreen> {
 
     if (totalAmountToSpray <= 0) {
       Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => LoadDash(token: widget.token)));
+          builder: (context) => LoadDash()));
     } else {
       String sprayUrl =
           "https://spray-dev.herokuapp.com/api/events/spray?event_code=${widget.ecode}";
@@ -97,7 +97,7 @@ class _SprayScreen extends State<SprayScreen> {
         ).show();
       } else {
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => LoadDash(token: widget.token)));
+            builder: (context) => LoadDash()));
         Fluttertoast.showToast(
             msg: "You Sprayed $totalAmountToSpray chi 🤑",
             toastLength: Toast.LENGTH_SHORT,
@@ -136,7 +136,7 @@ class _SprayScreen extends State<SprayScreen> {
       ).show();
     } else {
       Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => LoadDash(token: widget.token)));
+          builder: (context) => LoadDash()));
     }
   }
 

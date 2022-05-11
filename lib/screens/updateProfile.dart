@@ -60,7 +60,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                   context,
                   //  settings: RouteSettings(name: CreateEvent.routeName),
                   screen: LoadDash(
-                    token: widget.token,),
+                    ),
                   withNavBar: false,
                   pageTransitionAnimation: PageTransitionAnimation.cupertino);
             },

@@ -4,9 +4,9 @@ import 'package:giveawayui/screens/updateProfile.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:settings_ui/settings_ui.dart';
 class Settings extends StatefulWidget {
-  Settings({required this.token});
+  // Settings({required this.token});
 
-  final token;
+  // final token;
 
   @override
   _SettingsState createState() => _SettingsState();
@@ -52,7 +52,7 @@ class _SettingsState extends State<Settings> {
                       pushNewScreenWithRouteSettings(context,
                           settings: RouteSettings(name: UpdateProfile.routeName),
                           screen: UpdateProfile(
-                              token: widget.token,
+                              token: "widget.token",
                               parameter: "username",
                               icon: Icons.person,
                               keypadType: TextInputType.name),
@@ -69,7 +69,7 @@ class _SettingsState extends State<Settings> {
                   pushNewScreenWithRouteSettings(context,
                       settings: RouteSettings(name: UpdateProfile.routeName),
                       screen: UpdateProfile(
-                          token: widget.token,
+                          token: "widget.token",
                           parameter: "phone",
                           icon: Icons.phone,
                           keypadType: TextInputType.phone,),
@@ -86,7 +86,7 @@ class _SettingsState extends State<Settings> {
                   pushNewScreenWithRouteSettings(context,
                       settings: RouteSettings(name: UpdateProfile.routeName),
                       screen: UpdateProfile(
-                          token: widget.token,
+                          token: "widget.token",
                           parameter: "pin",
                           icon: Icons.lock,
                           keypadType: TextInputType.number,),

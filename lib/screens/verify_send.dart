@@ -129,7 +129,7 @@ class _VerifySendState extends State<VerifySend> {
       );
       Navigator.of(context).push(
           MaterialPageRoute(
-              builder:(context)=> LoadDash(token: widget.token)));
+              builder:(context)=> LoadDash()));
     }
   }
 

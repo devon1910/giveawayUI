@@ -124,7 +124,7 @@ class _ReceiveState extends State<Receive> {
                           duration: Duration(milliseconds: 5000), ), );
                         Navigator.of(context).push(
                             MaterialPageRoute(
-                                builder:(context)=> LoadDash(token: widget.token)));
+                                builder:(context)=> LoadDash()));
 
                       },
                       child: Text('Home'))

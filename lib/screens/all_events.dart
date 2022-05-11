@@ -10,9 +10,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 
 class AllEvents extends StatefulWidget {
-  AllEvents({required this.token,required this.allEvents});
-  final  String token;
-  final allEvents;
 
   @override
   _AllEventsState createState() => _AllEventsState();
@@ -27,22 +24,20 @@ class _AllEventsState extends State<AllEvents> {
   @override
   void initState() {
     // TODO: implement initState
-    var allEvents = json.decode(widget.allEvents.body);
-    Map<String, dynamic> eventsMap = allEvents;
-    List eventsList = eventsMap['data'];
-    data = eventsMap['data'];
-    print(data);
-    eventsLength = eventsList.length;
+    // var allEvents = json.decode(widget.allEvents.body);
+    // Map<String, dynamic> eventsMap = allEvents;
+    // List eventsList = eventsMap['data'];
+    // data = eventsMap['data'];
+    // print(data);
+    // eventsLength = eventsList.length;
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:SafeArea(
-        child: Container(
-          padding: EdgeInsets.all(30),
-          child: Column(
-            children: [
-              Row(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        elevation: 0,
+        title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Icon(
@@ -87,6 +82,13 @@ class _AllEventsState extends State<AllEvents> {
                     color: Color(0xFF3F51B5))
                 ],
               ),
+              
+      ),
+      body:SafeArea(
+        child: Container(
+          padding: EdgeInsets.all(30),
+          child: Column(
+            children: [
               SizedBox(height: getProportionateScreenHeight(30.0),),
               Container(
                 child: SizedBox(

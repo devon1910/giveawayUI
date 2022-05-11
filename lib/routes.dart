@@ -1,21 +1,22 @@
 import 'package:flutter/widgets.dart';
-import 'package:giveawayui/screens/Transactions.dart';
-import 'package:giveawayui/screens/amount.dart';
-import 'package:giveawayui/screens/confirm_pin.dart';
-import 'package:giveawayui/screens/confirm_pin2.dart';
-import 'package:giveawayui/screens/create_event.dart';
-import 'package:giveawayui/screens/dashboard.dart';
-import 'package:giveawayui/screens/event_code.dart';
-import 'package:giveawayui/screens/event_details.dart';
-import 'package:giveawayui/screens/forgot_password.dart';
-import 'package:giveawayui/screens/landing_screen.dart';
-import 'package:giveawayui/screens/onboarding.dart';
-import 'package:giveawayui/screens/otp.dart';
-import 'package:giveawayui/screens/receive.dart';
-import 'package:giveawayui/screens/updateProfile.dart';
-import 'package:giveawayui/screens/sign_in_screen.dart';
-import 'package:giveawayui/screens/sign_up_screen.dart';
-import 'package:giveawayui/screens/spray_amount.dart';
+import '/screens/Transactions.dart';
+import '/screens/amount.dart';
+import '/screens/confirm_pin.dart';
+import '/screens/confirm_pin2.dart';
+import '/screens/create_event.dart';
+import '/screens/dashboard.dart';
+import '/screens/event_code.dart';
+import '/screens/event_details.dart';
+import '/screens/forgot_password.dart';
+import '/screens/landing_screen.dart';
+import '/screens/onboarding.dart';
+import '/screens/otp.dart';
+import '/screens/receive.dart';
+import '/screens/updateProfile.dart';
+import '/screens/sign_in_screen.dart';
+import '/screens/sign_up_screen.dart';
+import '/screens/spray_amount.dart';
+import 'components/loadDash.dart';
 
 // All our routes will be available here
 final Map<String, WidgetBuilder> routes = {
@@ -26,8 +27,8 @@ final Map<String, WidgetBuilder> routes = {
   LandingScreen.routeName: (context) => LandingScreen(),
   ForgotPassword.routeName: (context) => ForgotPassword(),
   Otp.routeName: (context) => Otp(),
-  Dashboard.routeName: (context) => Dashboard(token: '',trans: '',user: '',allEvents: '', userEvent: '',),
-  Transactions.routeName: (context) => Transactions(trans:''),
+  Dashboard.routeName: (context) => Dashboard(),
+  Transactions.routeName: (context) => Transactions(),
   Receive.routeName: (context) => Receive(token: '',),
  // Send.routeName: (context) => Send(),
  // ScanScreen.routeName: (context) => ScanScreen(),
@@ -39,6 +40,7 @@ final Map<String, WidgetBuilder> routes = {
     email: '',password: '',pin: '',phone: ''),
   CreateEvent.routeName: (context) => CreateEvent(''),
   EventDetails.routeName: (context) => EventDetails(name: '',code: '',token: '',),
-  EventCode.routeName: (context) => EventCode(allEvents: '', token: '',),
   UpdateProfile.routeName: (context) => UpdateProfile(token: '', icon: IconData(0), parameter: '',),
+  LoadDash.routeName: (context) => LoadDash(),
+  EventCode.routeName: (context) => EventCode(allEvents: '', token: '',),
 };

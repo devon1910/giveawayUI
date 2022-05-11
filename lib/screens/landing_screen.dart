@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:giveawayui/screens/sign_in_screen.dart';
-import 'package:giveawayui/screens/sign_up_screen.dart';
+import 'package:get/get.dart';
+import '/screens/sign_in_screen.dart';
+import '/screens/sign_up_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../constants.dart';
@@ -11,6 +12,7 @@ class LandingScreen extends StatelessWidget {
   static String routeName = "/landingScreen";
   @override
   Widget build(BuildContext context) {
+    SizeConfig.init(Get.context!);
     return SafeArea(
         child: Container(
             color: Color(0xFF3F51B5),
