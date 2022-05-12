@@ -147,15 +147,16 @@ class HomeController extends GetxController {
     }
   }
 
-  Future getAllTransactions({int length = 2}) async {
+  Future getAllTransactions({int length = 2, int page= 1}) async {
     try {
       var response = await httpGet(
           url:
-              'https://spray-dev.herokuapp.com/api/transactions/me?limit=$length&page=1',
+              'https://spray-dev.herokuapp.com/api/transactions/me?limit=$length&page=$page',
           header: {'x-auth-token': userModel.token!});
       if(response['status'] == 200){
         TransactionModel? tModel = new TransactionModel.fromJson(response);
         if (tModel.data!.length > 0) {
+          print(response);
           return {'status': response['status'], 'message': tModel.data};
         }
         

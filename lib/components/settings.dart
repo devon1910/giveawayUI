@@ -1,12 +1,12 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
-import 'package:giveawayui/screens/updateProfile.dart';
+import '/screens/updateProfile.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:settings_ui/settings_ui.dart';
-class Settings extends StatefulWidget {
-  // Settings({required this.token});
+import 'package:get/get.dart';
 
-  // final token;
+import '../functions.dart';
+class Settings extends StatefulWidget {
 
   @override
   _SettingsState createState() => _SettingsState();
@@ -133,7 +133,7 @@ class _SettingsState extends State<Settings> {
               SettingsTile.navigation(
                 leading: Icon(Icons.logout),
                 title: Text('SignOut'),
-                // value: Text('English'),
+                onPressed: (context) => signOut()
               ),
             ],
           ),

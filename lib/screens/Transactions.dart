@@ -4,9 +4,9 @@ import '/components/ActionListTile.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../colors.dart';
-import '../size_config.dart';
 import '../widgets.dart';
 import 'controller/spray_controller.dart';
+import 'controller/transaction_controller.dart';
 
 class Transactions extends StatefulWidget {
   static String routeName = "/transactions";
@@ -16,58 +16,32 @@ class Transactions extends StatefulWidget {
 }
 
 class _TransactionsState extends State<Transactions> {
-  String dropdownValue = 'Transaction type';
-  // int transLength = 0;
-  // String transType = "";
-  // var transData, data;
-  // int subColor = 0xFF006400;
-  // String img = "assets/arrow-down-right-circle.png";
+
+
+  final k = Get.lazyPut(() => TransactionController());
+  final controller = Get.find<TransactionController>();
 
   @override
   void initState() {
-    allTransactions = controller.getAllTransactions(length: 10);
-    _controller.addListener(() {
-      if (_controller.position.atEdge) {
-        bool isTop = _controller.position.pixels == 0;
+    controller.getTransactions();
+    controller.controller.addListener(() {
+      if (controller.controller.position.atEdge) {
+        bool isTop = controller.controller.position.pixels == 0;
         if (isTop) {
-          print('At the top');
-        } else {
-          isLast.value = true;
-          print('At the bottom');
-        }
+          return;
+        } 
+        controller.loadMore();
+        
       }
     });
     super.initState();
-    // setState(() {
-    //   var transactions = json.decode(widget.trans.body);
-    //   Map<String, dynamic> transMap = transactions;
-    //   List transList = transMap['data'];
-    //   data = transMap['data'];
-    //   transLength = transList.length;
-    //   transType = data[transLength - 1]['type'];
-    //   updateActionTile();
-    // });
   }
-
-  // void updateActionTile() {
-  //   if (transType == "SEND") {
-  //     subColor = 0xFFDC143C;
-  //     img = "assets/Bitcoin.png";
-  //   }
-  // }
-
-  var allTransactions;
-  var data;
-  final k = Get.lazyPut(() => HomeController());
-  final controller = Get.find<HomeController>();
+  
 
   @override
   Widget build(BuildContext context) {
     notificationAreaStyle(white);
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => updateTransactionByCategory('Event'),
-      ),
       appBar: AppBar(
           centerTitle: true,
           elevation: 0,
@@ -137,7 +111,7 @@ class _TransactionsState extends State<Transactions> {
                     ),
                     DropdownButton<String>(
                       underline: Container(),
-                      value: dropdownValue,
+                      value: controller.dropdownValue,
                       icon: const Icon(Icons.keyboard_arrow_down_rounded),
                       iconSize: 30,
                       elevation: 16,
@@ -148,7 +122,7 @@ class _TransactionsState extends State<Transactions> {
                       // ),
                       onChanged: (String? newValue) {
                         setState(() {
-                          dropdownValue = newValue!;
+                          controller.dropdownValue = newValue!;
                         });
                       },
                       items: <String>[
@@ -171,84 +145,88 @@ class _TransactionsState extends State<Transactions> {
                 ),
               ),
               Expanded(
-                child: RefreshIndicator(
-                  onRefresh: refreshData,
-                  child: FutureBuilder(
-                    future: allTransactions,
-                    // initialData: InitialData,
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        if (snapshot.data['status'] == 403) {
-                          return Center(
-                              child: Text("Unable to load Transactions"));
-                        }
-
-                        if (snapshot.hasData) {
-                          data = snapshot.data['message'];
-                          return Column(
-                            children: [
-                              Expanded(
-                                child: MediaQuery.removePadding(
-                                  removeTop: true,
-                                  context: context,
-                                  child: Column(
-                                    children: [
-                                      Expanded(
+                child: Obx(() {
+                  return controller.isLoadingInit.value
+                      ? loadingDash()
+                      : !controller.dataIsLoaded.value
+                          ? Center(
+                              child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text("Error loading transactions"),
+                                ElevatedButton(
+                                    onPressed: () => controller.getTransactions(),
+                                    child: Text('Refresh'))
+                              ],
+                            ))
+                          : Stack(
+                              children: [
+                                Column(
+                                  children: [
+                                    MediaQuery.removePadding(
+                                      removeTop: true,
+                                      context: context,
+                                      child: Expanded(
                                         child: ListView.builder(
-                                          controller: _controller,
-                                            itemCount: data.length,
+                                            controller: controller.controller,
+                                            itemCount: controller.allTransactions.length,
                                             itemBuilder: (context, index) {
                                               return ActionListTile(
                                                   img: controller.img,
                                                   heading:
-                                                      '${data[index].transactionAmount} chi',
-                                                  subheading: data[index].description,
-                                                  subHeadColor: controller.subColor,
-                                                  message: '${data[index].type}',
+                                                      '${controller.allTransactions[index].transactionAmount} chi',
+                                                  subheading:
+                                                      controller.allTransactions[index]
+                                                          .description,
+                                                  subHeadColor:
+                                                      controller.subColor,
+                                                  message:
+                                                      '${controller.allTransactions[index].type}',
                                                   date:
-                                                      '${data[index].transactionDate.split(',')[0]}',
+                                                      '${controller.allTransactions[index].transactionDate.split(',')[0]}',
                                                   color: 0xFFEDF1F9);
                                             }),
                                       ),
-                                      Obx(() => isLast.value ? ElevatedButton(onPressed: loadMore, child: Text('load more'), ) : Container())
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ],
-                          );
-                        }
+                                Positioned(
+                                    bottom: 20,
+                                    left: Get.width * .49,
+                                    child: Obx(() => controller.isLoadedMore.value ? loadingDash() : Container() )
+                          )],);
 
-                        if (snapshot.hasError) {
-                          return Center(
-                              child: Text("Unable to load Transactions"));
-                        }
-
-                        if (!snapshot.hasData) {
-                          return Column(children: [
-                            SizedBox(
-                              height: getProportionateScreenHeight(30),
-                            ),
-                            Image.asset('assets/Mask.png',
-                                height: 50.0, color: Colors.grey),
-                            SizedBox(height: getProportionateScreenHeight(30)),
-                            Container(
-                              child: Center(
-                                child: Text('No Transactions',
-                                    style: GoogleFonts.nunito(
-                                        textStyle: TextStyle(
-                                            color: Color(0xFF3F51B5),
-                                            fontSize: 16.0,
-                                            fontWeight: FontWeight.w600))),
-                              ),
-                            ),
-                          ]);
-                        }
-                      }
-                      return loadingDash();
-                    },
-                  ),
-                ),
+                  // Stack(
+                  //           children: [
+                  //             Column(
+                  //               children: [
+                  //                 MediaQuery.removePadding(
+                  //                   removeTop: true,
+                  //                   context: context,
+                  //                   child: Expanded(
+                  //                     child: ListView.builder(
+                  //                       controller: _controller,
+                  //                         itemCount: data.length,
+                  //                         itemBuilder: (context, index) {
+                  //                           return ActionListTile(
+                  //                               img: controller.img,
+                  //                               heading:
+                  //                                   '${data[index].transactionAmount} chi',
+                  //                               subheading: data[index].description,
+                  //                               subHeadColor: controller.subColor,
+                  //                               message: '${data[index].type}',
+                  //                               date:
+                  //                                   '${data[index].transactionDate.split(',')[0]}',
+                  //                               color: 0xFFEDF1F9);
+                  //                         }),
+                  //                   ),
+                  //                 ),
+                  //               ],
+                  //             ),
+                  //             Obx(() => isLast.value ? ElevatedButton(onPressed: loadMore, child: Text('load more'), ) : Container())
+                  //           ],
+                  //         );
+                }),
               ),
             ],
           ),
@@ -256,63 +234,5 @@ class _TransactionsState extends State<Transactions> {
       ),
     );
   }
-
-  RxBool isLoading = false.obs;
-  int currentPosition = 0;
-  int currentPage = 1;
-  List sorted = [];
-  late int totalPage;
-  final _controller = ScrollController();
-  RxBool isLast = false.obs;
-
-  // late int totalLength;
-  // late TransactionData trans;
-  updateTransactionByCategory(category) async {
-    isLoading.value = true;
-    sorted.clear();
-    allTransactions = await controller.getAllTransactions(length: 1000);
-    // totalLength = allTransactions['message'].length;
-    totalPage = (allTransactions['message'].length / 10).ceil();
-    while (sorted.length < 10) {
-      for (var i = currentPosition; i < (currentPosition + 10); i++) {
-        var toAdd = allTransactions['message'][i][category] == category;
-        if (toAdd) sorted.add(allTransactions['message'][i].toJson());
-        if (sorted.length == 10) {
-          currentPosition = i;
-          break;
-        }
-      }
-
-      if (sorted.length != 10) currentPosition += 10;
-    }
-
-    print(sorted);
-    isLoading.value = false;
-  }
-
-  loadMore({category}) async {
-    isLast.value = false;
-    if(currentPosition == 0){
-      currentPosition = 10;
-      allTransactions = await controller.getAllTransactions(length: 1000);
-      // totalLength = allTransactions['message'].length;
-      totalPage = (allTransactions['message'].length / 10).ceil();
-      while (sorted.length < ((sorted.length > 10) ? (currentPosition + 10) : (currentPosition + 20))) {
-        for (var i = currentPosition; i < (currentPosition + 10); i++) {
-          var toAdd = category == null ? true : allTransactions['message'][i][category] == category;
-          if (toAdd) sorted.add(allTransactions['message'][i].toJson());
-          if (sorted.length == (currentPosition + 10)) {
-            currentPosition = i;
-            break;
-          }
-        }
-
-        if (sorted.length != 10) currentPosition += 10;
-      }}
-  }
-
-  Future<void> refreshData() async {
-    allTransactions = await controller.getAllTransactions(length: 1000);
-    print(allTransactions.toString() + "------- all trans");
-  }
 }
+

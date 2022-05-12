@@ -9,3 +9,4 @@ final Color brown = Colors.brown;
 final Color green = Colors.green;
 final Color primaryColor = Color(0xff3F51B5);
 final Color grey = Colors.grey;
+final Color deepGreen = Color(0xff38A3A5);

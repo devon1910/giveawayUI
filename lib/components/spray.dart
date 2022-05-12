@@ -1,6 +1,6 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../colors.dart';
 import '../constants.dart';
 import '../screens/Transactions.dart';
 import '../screens/controller/spray_controller.dart';
@@ -16,13 +16,6 @@ import 'ActionListTile.dart';
 import 'ActionTile.dart';
 
 class Spray extends StatefulWidget {
-  // const Spray({required this.token,
-  //   required this.trans,
-  //   required this.user,
-  //   required this.userEvent,
-  //   required this.allEvents});
-  // final  trans,user,userEvent,allEvents;
-  // final String token;
   @override
   _SprayState createState() => _SprayState();
 }
@@ -30,39 +23,11 @@ class Spray extends StatefulWidget {
 class _SprayState extends State<Spray> {
   @override
   void initState() {
-    data = controller.getAllTransactions(length: 5);
+    data = controller.getAllTransactions();
     super.initState();
-    // setState(() {
-    //  // virtualAmount=widget.user['data']['amount'];
-    //   amount=widget.user['data']['amount'];
-    // //  amount = virtualAmount.toDouble();
-    //   username = widget.user['data']['username'];
-    //   if(widget.userEvent.statusCode == 200) {
-    //     final responseEJson = json.decode(widget.userEvent.body);
-    //     //converting data from data parameter to List Then to map
-    //     //to access its Length
-    //     List dataLength = responseEJson['data'];
-    //     Map eventsMap = dataLength.asMap();
-    //     int lastIndex=dataLength.length-1;
-    //     eventStatus = eventsMap[lastIndex]['status'];
-    //     print('event Status: '+eventStatus);
-    //     ecode=  eventsMap[lastIndex]['event_code'];
-    //     print('event code: '+ecode);
-    //   }
-    //   if (widget.trans.statusCode == 200) {
-    //     var transactions = json.decode(widget.trans.body);
-    //     Map<String, dynamic> transMap = transactions;
-    //     List transList=transMap['data'];
-    //     data = transMap['data'];
-    //     transLength=transList.length;
-    //     transType=data[transLength-1]['type'];
-    //     isTran = true;
-    //   }
-    //   updateActionTile();
-    // });
   }
 
-  late var data;
+  late var data; bool isRefresh = false;
   final k = Get.lazyPut(() => HomeController());
   final controller = Get.find<HomeController>();
 
@@ -73,84 +38,101 @@ class _SprayState extends State<Spray> {
         // margin: EdgeInsets.only(bottom: 240.0),
         color: Color(0xFFFFFFFF),
         child: Column(children: [
-          Container(
-            padding: EdgeInsets.all(20.0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(bottomRight: Radius.circular(60)),
-              gradient: LinearGradient(colors: [
-                Color(0xFF3F51B5),
-                Color(0xFF38A3A5),
-                Color(0xFF38A3A5),
-                Color(0xFF38A3A5)
-              ]),
-              //borderRadius:
-            ),
-            child: Column(children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-                margin: EdgeInsets.only(top: 25.0),
-                child: Row(
-                  // crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Image.asset('assets/image1.png',
-                        height: getProportionateScreenHeight(70)),
-                    Container(
-                      margin:
-                          EdgeInsets.only(right: getProportionateScreenWidth(30)),
-                      child: Column(
-                          //  margin: EdgeInsets.only(right: 20),
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Hello ${userModel.user!.username}',
-                                textAlign: TextAlign.left,
-                                style: GoogleFonts.nunito(
-                                    textStyle: TextStyle(
-                                        color: Color(0xffffffff),
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.w800))),
-                            Text('Take a look at your\nwallet. Opor!',
-                                textAlign: TextAlign.start,
-                                style: GoogleFonts.nunito(
-                                    textStyle: TextStyle(
-                                        color: Color(0xffffffff),
-                                        fontSize: 15.0,
-                                        fontWeight: FontWeight.w300))),
-                          ]),
-                    ),
-                    // Icon(Icons.notifications_none_outlined,
-                    //     size: 40.0, color: Colors.white)
-                  ],
-                ),
+          Stack(children: [
+            Container(
+              height: Get.height * .35,
+              decoration: BoxDecoration(
+                borderRadius:
+                    BorderRadius.only(bottomRight: Radius.circular(60)),
+                color: deepGreen,
               ),
-              Container(
-                  // height: ,
-                  width: double.infinity,
-                  margin:
-                      EdgeInsets.only(left: getProportionateScreenWidth(40.0)),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+            Container(
+              height: Get.height * .35,
+              child: CustomPaint(
+                size: Size(
+                    Get.width,
+                    (Get.width)
+                        .toDouble()), //You can Replace [WIDTH] with your desired width for Custom Paint and height will be calculated automatically
+                painter: RPSCustomPainter(),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: Get.height * 0.03),
+              child: Column(children: [
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                  margin: EdgeInsets.only(top: 25.0),
+                  child: Row(
+                    // crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Text('\$${userModel.user!.amount!.toStringAsFixed(2)}',
-                          textAlign: TextAlign.start,
+                      Row(
+                        children: [
+                          Image.asset('assets/image1.png',
+                              height: getProportionateScreenHeight(70)),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              // margin: EdgeInsets.only(
+                              // right: getProportionateScreenWidth(40)),
+                              child: Column(
+                                  //  margin: EdgeInsets.only(right: 20),
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text('Hello ${userModel.user!.username}',
+                                        textAlign: TextAlign.left,
+                                        style: GoogleFonts.nunito(
+                                            textStyle: TextStyle(
+                                                color: Color(0xffffffff),
+                                                fontSize: 20.0,
+                                                fontWeight: FontWeight.w800))),
+                                    Text('Take a look at your\nwallet. Opor!',
+                                        textAlign: TextAlign.start,
+                                        style: GoogleFonts.nunito(
+                                            textStyle: TextStyle(
+                                                color: Color(0xffffffff),
+                                                fontSize: 15.0,
+                                                fontWeight: FontWeight.w300))),
+                                  ]),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Icon(Icons.notifications_none_outlined,
+                          size: 40.0, color: Colors.white)
+                    ],
+                  ),
+                ),
+                Container(
+                    // height: ,
+                    width: double.infinity,
+                    margin: EdgeInsets.only(
+                        left: getProportionateScreenWidth(40.0)),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('\$${userModel.user!.amount!.toStringAsFixed(2)}',
+                            textAlign: TextAlign.start,
+                            style: GoogleFonts.nunito(
+                                textStyle: TextStyle(
+                                    color: Color(0xffffffff),
+                                    fontSize: 40.0,
+                                    fontWeight: FontWeight.w900))),
+                        Text(
+                          'Balance',
+                          //textAlign: TextAlign.start,
                           style: GoogleFonts.nunito(
                               textStyle: TextStyle(
                                   color: Color(0xffffffff),
-                                  fontSize: 38.0,
-                                  fontWeight: FontWeight.w900))),
-                      Text(
-                        'Balance',
-                        //textAlign: TextAlign.start,
-                        style: GoogleFonts.nunito(
-                            textStyle: TextStyle(
-                                color: Color(0xffffffff),
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.w400)),
-                      )
-                    ],
-                  ))
-            ]),
-          ),
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.w400)),
+                        )
+                      ],
+                    ))
+              ]),
+            ),
+          ]),
           //SizedBox(height: getProportionateScreenHeight(5.0),),
           Container(
             //   margin: EdgeInsets.only(bottom: 30.0),
@@ -208,7 +190,8 @@ class _SprayState extends State<Spray> {
           ),
           Container(
             //  color: Colors.red,
-            margin: EdgeInsets.only(right: Get.width * 0.4),//getProportionateScreenWidth(120)
+            margin: EdgeInsets.only(
+                right: Get.width * 0.4), //getProportionateScreenWidth(120)
             child: Text(
               'Latest transaction',
               textAlign: TextAlign.start,
@@ -223,19 +206,29 @@ class _SprayState extends State<Spray> {
           Container(
             height: Get.height * .22,
             child: RefreshIndicator(
-              onRefresh: ()=> data = controller.getAllTransactions(),
+              onRefresh: () {
+                setState(() {
+                  isRefresh = true;
+                  data = controller.getAllTransactions();
+                });
+                return data;
+              },
               child: FutureBuilder(
                 future: data,
-                // initialData: InitialData,
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  
                   if (snapshot.connectionState == ConnectionState.done) {
-            
-                    if(snapshot.data['status'] == 403){
-                      return Center(child: Text("Unable to load Transactions"));
+                  isRefresh = false;
+                    if (snapshot.data['status'] == 403) {
+                      return Center(child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Unable to load Transactions"),
+                          ElevatedButton(onPressed: ()=> setState((){data = controller.getAllTransactions();}), child: Text('Reload'))
+                        ],
+                      ));
                     }
                     if (snapshot.hasData) {
-                    var data = snapshot.data['message'];
+                      var data = snapshot.data['message'];
                       return Column(
                         children: [
                           Expanded(
@@ -246,16 +239,15 @@ class _SprayState extends State<Spray> {
                                   itemCount: 2,
                                   itemBuilder: (context, index) {
                                     return ActionListTile(
-                                      img: controller.img,
-                                      heading:
-                                          '${data[index].transactionAmount} chi',
-                                      subheading: data[index].description,
-                                      subHeadColor: controller.subColor,
-                                      message:
-                                          '${data[index].type}',
-                                      date:
-                                          '${data[index].transactionDate.split(',')[0]}',
-                                      color: 0xFFEDF1F9);
+                                        img: controller.img,
+                                        heading:
+                                            '${data[index].transactionAmount} chi',
+                                        subheading: data[index].description,
+                                        subHeadColor: controller.subColor,
+                                        message: '${data[index].type}',
+                                        date:
+                                            '${data[index].transactionDate.split(',')[0]}',
+                                        color: 0xFFEDF1F9);
                                   }),
                             ),
                           ),
@@ -264,7 +256,8 @@ class _SprayState extends State<Spray> {
                             onTap: () {
                               pushNewScreenWithRouteSettings(
                                 context,
-                                settings: RouteSettings(name: Transactions.routeName),
+                                settings:
+                                    RouteSettings(name: Transactions.routeName),
                                 screen: Transactions(),
                                 withNavBar: true,
                                 pageTransitionAnimation:
@@ -281,11 +274,11 @@ class _SprayState extends State<Spray> {
                         ],
                       );
                     }
-                
+
                     if (snapshot.hasError) {
                       return Center(child: Text("Unable to load Transactions"));
                     }
-                    
+
                     if (!snapshot.hasData) {
                       return Column(children: [
                         SizedBox(
@@ -307,12 +300,12 @@ class _SprayState extends State<Spray> {
                       ]);
                     }
                   }
-                  return loadingDash();
+                  return (!isRefresh) ? loadingDash() : Container();
                 },
               ),
             ),
           ),
-           SizedBox(height: getProportionateScreenHeight(40)),
+          SizedBox(height: getProportionateScreenHeight(40)),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -331,22 +324,30 @@ class _SprayState extends State<Spray> {
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-                  margin: EdgeInsets.only(left: getProportionateScreenWidth(20)),
-                  decoration: BoxDecoration(boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 5,
-                      blurRadius: 7,
-                      offset: Offset(0, 3), // changes position of shadow
-                    ),
-                  ], color: Colors.white, borderRadius: BorderRadius.circular(8)),
+                  margin: EdgeInsets.only(
+                    left: getProportionateScreenWidth(20),
+                  ),
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: Offset(0, 3), // changes position of shadow
+                      ),
+                    ],
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                   child: Text(
-                      "Create", //eventStatus == "ACTIVE" ? "End Event" : "Create Event", //TODO
-                      style: GoogleFonts.inter(
-                          textStyle: TextStyle(
-                              color: Color(0xFF38A3A5),
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w600))),
+                    "Create", //eventStatus == "ACTIVE" ? "End Event" : "Create Event", // TODO
+                    style: GoogleFonts.inter(
+                      textStyle: TextStyle(
+                          color: Color(0xFF38A3A5),
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ),
                 ),
               ),
               GestureDetector(
@@ -355,7 +356,8 @@ class _SprayState extends State<Spray> {
                   controller.getAllTransactions();
                 },
                 child: Container(
-                  margin: EdgeInsets.only(left: getProportionateScreenWidth(10)),
+                  margin:
+                      EdgeInsets.only(left: getProportionateScreenWidth(10)),
                   padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
                   decoration: BoxDecoration(
                       color: Color(0xFF3F51B5),
@@ -375,4 +377,38 @@ class _SprayState extends State<Spray> {
       ),
     );
   }
+}
+
+class RPSCustomPainter extends CustomPainter{
+  
+  @override
+  void paint(Canvas canvas, Size size) {
+    
+    
+
+  Paint paint0 = Paint()
+      ..color = primaryColor
+      ..style = PaintingStyle.fill
+      ..strokeWidth = 1.0;
+     
+         
+    Path path0 = Path();
+    path0.moveTo(0,0);
+    path0.lineTo(size.width*0.9987600,0);
+    path0.lineTo(size.width*0.9994200,size.height*0.2007363);
+    path0.lineTo(size.width*0.5058400,size.height*0.9986613);
+    path0.lineTo(0,size.height*1.0014458);
+    path0.lineTo(0,0);
+    path0.close();
+
+    canvas.drawPath(path0, paint0);
+  
+    
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
+  }
+  
 }
