@@ -46,7 +46,7 @@ Map<String, dynamic> defaultSettings = {
 
 late UserModel userModel;
 //to update or read the get_storage data
-late AppSettings generalAppSettings;
+late AppSettings generalFunction;
 //to initialize the get storage
 late GetStorage appStorage;
 late GetStorage userStorage;

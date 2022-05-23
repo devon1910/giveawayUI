@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../colors.dart';
 import '../widgets.dart';
-import 'controller/spray_controller.dart';
 import 'controller/transaction_controller.dart';
 
 class Transactions extends StatefulWidget {
@@ -17,16 +16,15 @@ class Transactions extends StatefulWidget {
 
 class _TransactionsState extends State<Transactions> {
 
-
   final k = Get.lazyPut(() => TransactionController());
   final controller = Get.find<TransactionController>();
 
   @override
   void initState() {
     controller.getTransactions();
-    controller.controller.addListener(() {
-      if (controller.controller.position.atEdge) {
-        bool isTop = controller.controller.position.pixels == 0;
+    controller.scrollController.addListener(() {
+      if (controller.scrollController.position.atEdge) {
+        bool isTop = controller.scrollController.position.pixels == 0;
         if (isTop) {
           return;
         } 
@@ -95,50 +93,49 @@ class _TransactionsState extends State<Transactions> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   // crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Color(0xff3F51B5),
-                          borderRadius: BorderRadius.circular(10)),
-                      padding:
-                          EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                      child: Text(
-                        'All',
-                        style: TextStyle(
-                          color: Colors.white,
-                          //backgroundColor:
+                    GestureDetector(
+                      onTap: ()=> controller.getTransactions(transType: 'Transaction type'),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Color(0xff3F51B5),
+                            borderRadius: BorderRadius.circular(10)),
+                        padding:
+                            EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                        child: Text(
+                          'All',
+                          style: TextStyle(
+                            color: Colors.white,
+                            //backgroundColor:
+                          ),
                         ),
                       ),
                     ),
-                    DropdownButton<String>(
-                      underline: Container(),
-                      value: controller.dropdownValue,
-                      icon: const Icon(Icons.keyboard_arrow_down_rounded),
-                      iconSize: 30,
-                      elevation: 16,
-                      style: const TextStyle(color: Colors.deepPurple),
-                      // underline: Container(
-                      //   height: 2,
-                      //   color: Colors.deepPurpleAccent,
-                      // ),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          controller.dropdownValue = newValue!;
-                        });
-                      },
-                      items: <String>[
-                        'Transaction type',
-                        'Deposit',
-                        'Withdraw',
-                        'Send',
-                        'Event'
-                      ].map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value,
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.w300)),
+                    Obx(() {
+                        return DropdownButton<String>(
+                          underline: Container(),
+                          value: controller.dropdownValue.value,
+                          icon: const Icon(Icons.keyboard_arrow_down_rounded),
+                          iconSize: 30,
+                          elevation: 16,
+                          style: const TextStyle(color: Colors.deepPurple),
+                          // underline: Container(
+                          //   height: 2,
+                          //   color: Colors.deepPurpleAccent,
+                          // ),
+                          onChanged: (String? newValue) {
+                              controller.dropdownValue.value = newValue!;
+                              controller.onChangeType(cat: newValue);
+                          },
+                          items: controller.transactionType.map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value,
+                                  style: TextStyle(
+                                      fontSize: 18, fontWeight: FontWeight.w300)),
+                            );
+                          }).toList(),
                         );
-                      }).toList(),
+                      }
                     ),
                     Icon(Icons.calendar_today, color: Color(0xff3F51B5))
                   ],
@@ -168,7 +165,7 @@ class _TransactionsState extends State<Transactions> {
                                       context: context,
                                       child: Expanded(
                                         child: ListView.builder(
-                                            controller: controller.controller,
+                                            controller: controller.scrollController,
                                             itemCount: controller.allTransactions.length,
                                             itemBuilder: (context, index) {
                                               return ActionListTile(
@@ -195,37 +192,6 @@ class _TransactionsState extends State<Transactions> {
                                     left: Get.width * .49,
                                     child: Obx(() => controller.isLoadedMore.value ? loadingDash() : Container() )
                           )],);
-
-                  // Stack(
-                  //           children: [
-                  //             Column(
-                  //               children: [
-                  //                 MediaQuery.removePadding(
-                  //                   removeTop: true,
-                  //                   context: context,
-                  //                   child: Expanded(
-                  //                     child: ListView.builder(
-                  //                       controller: _controller,
-                  //                         itemCount: data.length,
-                  //                         itemBuilder: (context, index) {
-                  //                           return ActionListTile(
-                  //                               img: controller.img,
-                  //                               heading:
-                  //                                   '${data[index].transactionAmount} chi',
-                  //                               subheading: data[index].description,
-                  //                               subHeadColor: controller.subColor,
-                  //                               message: '${data[index].type}',
-                  //                               date:
-                  //                                   '${data[index].transactionDate.split(',')[0]}',
-                  //                               color: 0xFFEDF1F9);
-                  //                         }),
-                  //                   ),
-                  //                 ),
-                  //               ],
-                  //             ),
-                  //             Obx(() => isLast.value ? ElevatedButton(onPressed: loadMore, child: Text('load more'), ) : Container())
-                  //           ],
-                  //         );
                 }),
               ),
             ],

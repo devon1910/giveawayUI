@@ -147,22 +147,68 @@ class HomeController extends GetxController {
     }
   }
 
-  Future getAllTransactions({int length = 2, int page= 1}) async {
+
+  //TODO check on token expires
+  int recursion = 0;
+  Future getAllTransactions(
+      {int length = 2, int page = 1, String? category}) async {
     try {
-      var response = await httpGet(
-          url:
-              'https://spray-dev.herokuapp.com/api/transactions/me?limit=$length&page=$page',
-          header: {'x-auth-token': userModel.token!});
-      if(response['status'] == 200){
+      final response;
+      print(
+          '$category sele ----------------------------------------------------------------');
+
+      if (category == null || category == 'Transaction type') {
+        print('first ---------------------------------');
+        response = await httpGet(
+            url:
+                'https://spray-dev.herokuapp.com/api/transactions/me?limit=$length&page=$page',
+            header: {'x-auth-token': userModel.token!});
+      } else {
+
+        print('last ---------------------------------');
+        Map cat = {
+          // 'Transaction type': 'ALL',
+          'Deposit': 'FUND',
+          'Withdraw': 'REDEEM',
+          'Send': 'SEND',
+          'Event': 'EVENT'
+        };
+        String url =
+            'https://spray-dev.herokuapp.com/api/transactions/me?limit=$length&page=$page&type=${cat[category]}';
+        print(url);
+        response =
+            await httpGet(url: url, header: {'x-auth-token': userModel.token!});
+      }
+
+      if (response['msg'] == 'Token is not valid') {
+        // print('user verify');
+        if (recursion == 1) {
+          //  print('out of veri');
+          // isLoadingInit.value = false; //false
+          throw Exception("Couldn't load data try again");
+        }
+
+        if (await refreshUserToken()) {
+          // print('recurse');
+          recursion = 1;
+          getAllTransactions(length: length, page: page, category: category);
+        } else {
+          throw Exception(
+              "Couldn't verify user authentic try logout and login again");
+        }
+      }
+
+      print(response);
+      if (response['status'] == 200) {
         TransactionModel? tModel = new TransactionModel.fromJson(response);
         if (tModel.data!.length > 0) {
           print(response);
           return {'status': response['status'], 'message': tModel.data};
         }
-        
+
         return null;
       }
-      
+
       return response;
     } catch (e) {
       print(e);

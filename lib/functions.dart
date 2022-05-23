@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 import 'constants.dart';
+import 'models/UserModel.dart';
 import 'screens/landing_screen.dart';
 
 Future httpPost({required String? url, body, header}) async {
@@ -27,6 +28,22 @@ Future httpGet({required String? url, Map<String, String>? header}) async {
 
 signOut(){
   Get.offAllNamed(LandingScreen.routeName);
-  generalAppSettings.updateSettings(setting: {'isLogin': false});
+  generalFunction.updateSettings(setting: {'isLogin': false});
   userStorage.erase();
+}
+
+Future<bool> refreshUserToken() async {
+   var body = {
+        "email": 'smart',
+        "password": '123456',
+      };
+      // print('calling user auth');
+    var response = await httpPost(url: 'https://spray-dev.herokuapp.com/api/users/auth/', body: body);
+    if(response['status'] == 200 && response['message'] == "authentication successful"){
+      userModel = UserModel.fromJson(response);
+      generalFunction.updateUser(user: response);
+      return true;
+    }
+
+  return false;
 }

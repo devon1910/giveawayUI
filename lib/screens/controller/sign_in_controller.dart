@@ -34,8 +34,8 @@ class SigninControler extends GetxController {
           kSuccessMessage(title: "Welcome", message: "You have successfully login");
           userModel = UserModel.fromJson(response);
           print(response.toString() + "---------------------- ser response data ----------------------------------");
-          generalAppSettings.updateUser(user: response);
-          generalAppSettings.updateSettings(setting: {"isLogin": true});
+          generalFunction.updateUser(user: response);
+          generalFunction.updateSettings(setting: {"isLogin": true});
           isLoading = false;
           Get.toNamed(Dashboard.routeName);
           update();

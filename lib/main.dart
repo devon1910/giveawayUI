@@ -13,8 +13,8 @@ import 'screens/landing_screen.dart';
 import 'size_config.dart';
 
 void main() async {
-  generalAppSettings = AppSettings.instance;
-  await generalAppSettings.initializeSettings();
+  generalFunction = AppSettings.instance;
+  await generalFunction.initializeSettings();
   runApp(MyApp());
 }
 

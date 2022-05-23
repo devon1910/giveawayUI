@@ -1,10 +1,8 @@
 import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:giveawayui/screens/landing_screen.dart';
-import 'package:giveawayui/screens/sign_in_screen.dart';
-import 'package:giveawayui/size_config.dart';
+import '/screens/landing_screen.dart';
+import '/size_config.dart';
 import 'package:get/get.dart';
 
 import '../constants.dart';
@@ -98,7 +96,7 @@ class _OnBoardingState extends State<OnBoarding> {
         return;
     }
 
-    generalAppSettings.updateSettings(setting: {"onBoarding": false});
+    generalFunction.updateSettings(setting: {"onBoarding": false});
     Get.offAllNamed(LandingScreen.routeName);
 
   }
