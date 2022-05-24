@@ -26,7 +26,7 @@ class CategoryTile extends StatelessWidget {
           style: GoogleFonts.nunito(
               textStyle: TextStyle(
                   color: Color(0xff38A3A5),
-                  fontSize: 16.0,
+                  fontSize: 14.0,
                   fontWeight: FontWeight.w700)),
         ),
       ),
