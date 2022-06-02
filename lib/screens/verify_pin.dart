@@ -120,10 +120,6 @@ class _VerifyPinState extends State<VerifyPin> {
         context,
         settings: RouteSettings(name: SprayScreen.routeName),
         screen: SprayScreen(
-          token: widget.token,
-          times: widget.times,
-          amount: widget.amount,
-          ecode: widget.ecode,
         ),
         withNavBar: false,
         pageTransitionAnimation: PageTransitionAnimation.cupertino,

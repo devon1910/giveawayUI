@@ -3,14 +3,10 @@ import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import '/routes.dart';
 import '/screens/onboarding.dart';
-import 'package:google_fonts/google_fonts.dart';
-import '/screens/splash_screen.dart';
 import 'app_settings.dart';
-import 'components/loadDash.dart';
 import 'constants.dart';
 import 'screens/dashboard.dart';
 import 'screens/landing_screen.dart';
-import 'size_config.dart';
 
 void main() async {
   generalFunction = AppSettings.instance;

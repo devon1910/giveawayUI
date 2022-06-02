@@ -33,7 +33,16 @@ class AppSettings {
         appSettings = defaultSettings;
         writeStorage(appStorage, {"getx_app_settings": appSettings});
       }
-      appSettings = readStorage(appStorage, "getx_app_settings");
+
+      // calculate the last time the userCreate last event
+      appSettings = await readStorage(appStorage, "getx_app_settings");
+
+      if(appSettings['lastEventTime'] > 0){
+        var nows = DateTime.now().millisecondsSinceEpoch;
+        var time = ((nows - appSettings['lastEventTime']) / 1000 / 60 / 60 / 24); //microseconds, minute, seconds, hours
+        if(time > 0) generalFunction.updateSettings(setting:  {'hasEvent': false, 'lastTimeEvent': 0});
+      }
+      
     }
     
     if(userInit){

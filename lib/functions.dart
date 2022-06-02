@@ -28,7 +28,7 @@ Future httpGet({required String? url, Map<String, String>? header}) async {
 
 signOut(){
   Get.offAllNamed(LandingScreen.routeName);
-  generalFunction.updateSettings(setting: {'isLogin': false});
+  generalFunction.updateSettings(setting: {'isLogin': false, 'hasEvent': false, 'lastEventTime': 0});
   userStorage.erase();
 }
 

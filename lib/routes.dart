@@ -17,6 +17,7 @@ import '/screens/sign_in_screen.dart';
 import '/screens/sign_up_screen.dart';
 import '/screens/spray_amount.dart';
 import 'components/loadDash.dart';
+import 'screens/spray_screen.dart';
 
 // All our routes will be available here
 final Map<String, WidgetBuilder> routes = {
@@ -33,14 +34,13 @@ final Map<String, WidgetBuilder> routes = {
  // Send.routeName: (context) => Send(),
  // ScanScreen.routeName: (context) => ScanScreen(),
   Amount.routeName: (context) => Amount(),
-  ConfirmPin.routeName: (context) => ConfirmPin(fullname: '',username: '',phone: '',
-      email: '',password: ''),
+  ConfirmPin.routeName: (context) => ConfirmPin(),
   SprayAmount.routeName: (context) => SprayAmount(ecode: '',token: '',),
-  ConfirmPin2.routeName: (context) => ConfirmPin2(fullname: '',username: '',
-    email: '',password: '',pin: '',phone: ''),
-  CreateEvent.routeName: (context) => CreateEvent(''),
-  EventDetails.routeName: (context) => EventDetails(name: '',code: '',token: '',),
+  ConfirmPin2.routeName: (context) => ConfirmPin2(),
+  CreateEvent.routeName: (context) => CreateEvent(),
+  EventDetails.routeName: (context) => EventDetails(),
   UpdateProfile.routeName: (context) => UpdateProfile(token: '', icon: IconData(0), parameter: '',),
   LoadDash.routeName: (context) => LoadDash(),
   EventCode.routeName: (context) => EventCode(allEvents: '', token: '',),
+  SprayScreen.routeName: (context) => SprayScreen(),
 };

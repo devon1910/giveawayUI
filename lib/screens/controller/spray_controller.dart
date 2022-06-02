@@ -1,7 +1,12 @@
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:giveawayui/screens/confirm_pin.dart';
 import '../../constants.dart';
 import '../../models/transaction_model.dart';
+import '../../models/userModelWithPin.dart';
 import '/functions.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -26,6 +31,32 @@ class HomeController extends GetxController {
   int subColor = 0xFF006400;
   String img = "assets/arrow-down-right-circle.png";
   var transData, data;
+  bool hasEvent = false;
+
+
+  @override
+  void onReady() {
+    print('runnung onReady');
+    checkUserTpin();
+    super.onReady();
+  }
+
+  checkUserTpin() async{
+    String url = 'https://spray-dev.herokuapp.com/api/users/';
+    Map<String, dynamic> response = await  httpGet(url: url, header: {
+      "Content-Type": "application/json",
+      "x-auth-token": userModel.token!
+    });
+
+    UserDetailsWithPin userDetailsWithPin =UserDetailsWithPin.fromJson((response));
+    print(userDetailsWithPin.data!.pin);
+    if(userDetailsWithPin.data!.pin == null){
+      Get.toNamed(ConfirmPin.routeName, arguments: true);
+    }
+
+    print("Confirmed");
+    return;
+  }
 
   void endEvent() async {
     String endEventUrl = "https://spray-dev.herokuapp.com/api/events"
@@ -146,7 +177,6 @@ class HomeController extends GetxController {
       img = "assets/Bitcoin.png";
     }
   }
-
 
   //TODO check on token expires
   int recursion = 0;

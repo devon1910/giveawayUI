@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:giveawayui/screens/spray_screen.dart';
 import '../colors.dart';
 import '../constants.dart';
 import '../screens/Transactions.dart';
 import '../screens/controller/spray_controller.dart';
+import '../screens/create_event.dart';
 import '../widgets.dart';
 import '/screens/deposit.dart';
 import '/screens/receive.dart';
@@ -23,6 +25,7 @@ class Spray extends StatefulWidget {
 class _SprayState extends State<Spray> {
   @override
   void initState() {
+    // checkEventStatus();
     data = controller.getAllTransactions();
     super.initState();
   }
@@ -311,16 +314,18 @@ class _SprayState extends State<Spray> {
             children: [
               GestureDetector(
                 onTap: () {
-                  // if (eventStatus == "ACTIVE") {
-                  //   // endEvent();
-                  // } else {
-                  //   pushNewScreen(context,
-                  //       //  settings: RouteSettings(name: CreateEvent.routeName),
-                  //       screen: CreateEvent("widget.token"),
-                  //       withNavBar: false,
-                  //       pageTransitionAnimation:
-                  //           PageTransitionAnimation.cupertino);
-                  // }
+                  print(appSettings);
+                  // appSettings['lastEventTime'] = 0;
+                  if(appSettings['lastEventTime'] > 0){
+                    Get.to(SprayScreen(), arguments: appSettings['eventDetails']);
+                  } else {
+                    pushNewScreen(context,
+                        //  settings: RouteSettings(name: CreateEvent.routeName),
+                        screen: CreateEvent(),
+                        withNavBar: false,
+                        pageTransitionAnimation:
+                            PageTransitionAnimation.cupertino);
+                  }
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
@@ -340,7 +345,7 @@ class _SprayState extends State<Spray> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    "Create", //eventStatus == "ACTIVE" ? "End Event" : "Create Event", // TODO
+                   appSettings['hasEvent'] ? "My Event" : "Create Event",
                     style: GoogleFonts.inter(
                       textStyle: TextStyle(
                           color: Color(0xFF38A3A5),
@@ -351,10 +356,7 @@ class _SprayState extends State<Spray> {
                 ),
               ),
               GestureDetector(
-                onTap: () {
-                  // loadDialog();
-                  controller.getAllTransactions();
-                },
+                onTap: controller.getAllTransactions,
                 child: Container(
                   margin:
                       EdgeInsets.only(left: getProportionateScreenWidth(10)),

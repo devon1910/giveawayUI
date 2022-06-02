@@ -20,6 +20,7 @@ class SigninControler extends GetxController {
 
   bool obscure = true;
   bool isLoading = false;
+  
   void submit() async{
     if (formKey.currentState!.validate()) {
       isLoading = true;
@@ -42,7 +43,8 @@ class SigninControler extends GetxController {
           return;
       }
 
-      kErrorMessage(title: "Invalid Credentials", message: response['message']);
+      // kErrorMessage(title: "Invalid Credentials", message: response['message']);
+      alert(title: response['message'], isSuccess: false);
       isLoading = false;
       update();
       return;

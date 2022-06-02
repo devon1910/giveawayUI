@@ -50,8 +50,8 @@ dependencies:
   flutter_native_splash: ^2.1.6
   get_storage: ^2.0.3
   animated_bottom_navigation_bar: ^0.3.2
-  infinite_scroll_pagination: ^3.1.0
-  faker: ^2.0.0
+  # connectivity_plus: ^2.3.0
+  flutter_offline: ^2.1.0
 
 
 

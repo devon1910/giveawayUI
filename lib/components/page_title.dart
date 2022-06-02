@@ -30,7 +30,7 @@ class PageTitle extends StatelessWidget {
               style: GoogleFonts.nunito(
                   textStyle: TextStyle(
                       color: Color(0xff3F51B5),
-                      fontSize: 36.0,
+                      fontSize: 30.0,
                       fontWeight: FontWeight.w800)),
             ),
           ),

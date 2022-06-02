@@ -1,20 +1,14 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
-import 'package:giveawayui/screens/spray_amount.dart';
+import 'package:get/get.dart';
+import 'package:giveawayui/screens/confirm_pin2.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 import '../size_config.dart';
-import 'confirm_pin2.dart';
 
 
 class ConfirmPin extends StatefulWidget {
   static String routeName="/confirmpin";
-
-  ConfirmPin({required this.fullname,required this.username,
-    required this.email,required this.password,
-  required this.phone});
-  final String fullname,username,email,password,phone;
 
   @override
   _ConfirmPinState createState() => _ConfirmPinState();
@@ -22,6 +16,9 @@ class ConfirmPin extends StatefulWidget {
 
 
 class _ConfirmPinState extends State<ConfirmPin> {
+
+  bool arg = Get.arguments;
+
   late FocusNode  pin2FocusNode;
   late FocusNode  pin3FocusNode;
   late FocusNode  pin4FocusNode;
@@ -29,7 +26,6 @@ class _ConfirmPinState extends State<ConfirmPin> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     pin2FocusNode =FocusNode();
     pin3FocusNode =FocusNode();
@@ -43,7 +39,6 @@ class _ConfirmPinState extends State<ConfirmPin> {
   }
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     pin2FocusNode.dispose();
     pin3FocusNode.dispose();
@@ -58,12 +53,12 @@ class _ConfirmPinState extends State<ConfirmPin> {
         child: Column(
           children: [
             Text(
-              'Verification Required',
+             arg ? 'Please Setup Your Transaction Pin' : 'Verification Required',
               style: GoogleFonts.nunito(
                   textStyle: TextStyle(
-                      color: Color(0xff000000), fontSize: 25.0, fontWeight: FontWeight.w800)),),
+                      color: Color(0xff000000), fontSize: 25.0, fontWeight: FontWeight.w800)),textAlign: TextAlign.center,),
             SizedBox(height: getProportionateScreenHeight(15)),
-            Text("Please enter your PIN to proceed",
+            Text(arg ? 'Please enter your preferred PIN to proceed' : "Please enter your PIN to proceed",
                 style: GoogleFonts.titilliumWeb(
                     textStyle: TextStyle(
                         color: Color(0xff485068), fontSize: 15.0, fontWeight: FontWeight.w400)) ,
@@ -178,25 +173,7 @@ class _ConfirmPinState extends State<ConfirmPin> {
                           onChanged: (value){
                             pin+=value;
                             pin4FocusNode.unfocus();
-                            // pushNewScreenWithRouteSettings(
-                            //   context,
-                            //   settings: RouteSettings(name: SprayAmount.routeName),
-                            //   screen: SprayAmount(),
-                            //   withNavBar: true,
-                            //   pageTransitionAnimation: PageTransitionAnimation.cupertino,
-                            // );
-                            print(pin);
-                            print(widget.fullname);
-                            print(widget.username);
-                            print(widget.password);
-                            print(widget.email);
-                            print(widget.phone);
-                            Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder:(context)=> ConfirmPin2(fullname: widget.fullname,
-                                      username: widget.username, email: widget.email, phone: widget.phone,
-                                      password: widget.password, pin: pin)));
-
+                            Get.toNamed("/confirmpin2", arguments: {'pin': pin});
                           },
                           obscureText: true,
                           keyboardType: TextInputType.number,

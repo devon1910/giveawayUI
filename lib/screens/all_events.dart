@@ -109,7 +109,10 @@ class _AllEventsState extends State<AllEvents> {
                         ),
                         CategoryTile(category: 'Wedding', margin: 14.0,color:0xFFE0E7CC),
                         CategoryTile(category: 'Concert', margin: 14.0,color: 0xFFF5F5F8),
-                        CategoryTile(category: 'Birthday', margin: 0.0,color: 0xFFEDF5F9),
+                        CategoryTile(category: 'Birthday', margin: 14.0,color: 0xFFEDF5F9),
+                        CategoryTile(category: 'Naming Celebration', margin: 14.0,color: 0xFFF5F5F8),
+                        CategoryTile(category: 'Religious Event', margin: 14.0,color: 0xFFE0E7CC),
+                        CategoryTile(category: 'Others', margin: 14.0,color: 0xFFEDF5F9),
                       ]
                     ),
                   ),

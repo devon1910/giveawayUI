@@ -28,7 +28,7 @@ class TransactionController extends GetxController {
     'Deposit', // FUND
     'Withdraw', // REDEEM
     'Send', // SEND
-    'Event' // EVENT
+    'Event' // EVENT,
   ];
 
   final Map data = {

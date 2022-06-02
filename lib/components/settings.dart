@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import '../constants.dart';
 import '/screens/updateProfile.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:settings_ui/settings_ui.dart';
@@ -52,7 +53,7 @@ class _SettingsState extends State<Settings> {
                       pushNewScreenWithRouteSettings(context,
                           settings: RouteSettings(name: UpdateProfile.routeName),
                           screen: UpdateProfile(
-                              token: "widget.token",
+                              token: userModel.token!,
                               parameter: "username",
                               icon: Icons.person,
                               keypadType: TextInputType.name),
@@ -61,15 +62,15 @@ class _SettingsState extends State<Settings> {
                           PageTransitionAnimation.cupertino);
                     },
                 leading: Icon(Icons.person),
-                title: Text('Username'),
-                 value: Text('Cheif'),
+                title: Text(userModel.user!.username!),
+                 value: Text('username'),
               ),
               SettingsTile.navigation(
                 onPressed: (value){
                   pushNewScreenWithRouteSettings(context,
                       settings: RouteSettings(name: UpdateProfile.routeName),
                       screen: UpdateProfile(
-                          token: "widget.token",
+                          token: userModel.token!,
                           parameter: "phone",
                           icon: Icons.phone,
                           keypadType: TextInputType.phone,),
@@ -78,15 +79,15 @@ class _SettingsState extends State<Settings> {
                       PageTransitionAnimation.cupertino);
                 },
                 leading: Icon(Icons.phone),
-                title: Text('Phone Number'),
-               // value: Text('English'),
+                title: Text(userModel.user!.phone!),
+               value: Text('phone'),
               ),
               SettingsTile.navigation(
                 onPressed: (value){
                   pushNewScreenWithRouteSettings(context,
                       settings: RouteSettings(name: UpdateProfile.routeName),
                       screen: UpdateProfile(
-                          token: "widget.token",
+                          token: userModel.token!,
                           parameter: "pin",
                           icon: Icons.lock,
                           keypadType: TextInputType.number,),

@@ -1,5 +1,4 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -42,7 +41,13 @@ Map<String, dynamic> appSettings = {};
 Map<String, dynamic> defaultSettings = {
   "onBoarding": true,
   "isLogin": false,
+  'hasEvent': false,
+  'lastEventTime': 0, 
 };
+
+final eventType = <String>[
+    'Event Type', 'Wedding', 'Birthday' 'Party', 'Concert', 'Naming Celebration', 'Religious Event', 'Others'
+  ];
 
 late UserModel userModel;
 //to update or read the get_storage data
