@@ -85,6 +85,7 @@ class LandingScreen extends StatelessWidget {
               ),
               SizedBox(height: 20),
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text('Don\'t have an account?       ',
                       style: GoogleFonts.titilliumWeb(

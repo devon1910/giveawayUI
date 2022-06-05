@@ -27,31 +27,31 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
-  google_fonts: ^2.1.0
-  flutter_svg: ^0.23.0+1
+  cupertino_icons: ^1.0.5
+  google_fonts: ^3.0.1
+  flutter_svg: ^1.1.0
   persistent_bottom_nav_bar: ^4.0.2
-  path_provider: ^2.0.4
-  barcode_scan2: ^4.1.4
+  path_provider: ^2.0.10
+  barcode_scan2: ^4.2.1
   qr_flutter: ^4.0.0
-  qr_code_scanner: ^0.6.1
+  qr_code_scanner: ^1.0.0
   swipe: ^0.0.1
   flutter_swipe_detector: ^2.0.0
-  http: ^0.13.3
+  http: ^0.13.4
   rflutter_alert: ^2.0.4
-  image_picker: ^0.8.4
+  image_picker: ^0.8.5+3
   social_share: ^2.2.1
-  fluttertoast: ^8.0.8
+  fluttertoast: ^8.0.9
   sleek_circular_slider: ^2.0.1
   flutter_spinkit: ^5.1.0
-  get: any
-  screen_utils: any
+  get: ^4.6.5
   settings_ui: ^2.0.2
-  flutter_native_splash: ^2.1.6
+  flutter_native_splash: ^2.2.2
   get_storage: ^2.0.3
-  animated_bottom_navigation_bar: ^0.3.2
+  animated_bottom_navigation_bar: ^0.3.3
   # connectivity_plus: ^2.3.0
   flutter_offline: ^2.1.0
+  modal_bottom_sheet: ^2.1.0
 
 
 
